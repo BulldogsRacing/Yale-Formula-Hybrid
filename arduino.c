@@ -84,10 +84,11 @@
                 //analog input pins
                 
                 #define rpmPin             A0 //RPM 
-                #define throttlePin        A1 //throttle amount - from the pedal
-                #define gearPin            A2 //gear sensor
-                #define radiatorTempPin    A3 //Temperature of the radiator 
-                #define fuelPin            A4 //fuel level sensor
+                #define throttlePin        A4 //throttle amount - from the pedal
+                #define radiatorTempPin    A1 //Temperature of the radiator 
+                #define fuelPin            A3 //fuel level sensor
+                #define regenDialPin       A5 //what is this?
+                #define enduranceDialPin   A6 //what is this?
 
                 //digital input pins  
                 
@@ -95,15 +96,14 @@
                 #define hiVoltageLoBattPin 22 //HIGH when the High voltage battery is critical
                 #define BMSFaultPin        23 //HIGH when there is a problem with the BMS (critical temperature for example)
                 #define clutchPin          24 //HIGH when the clutch is pressed
-                #define brakePin           25 //HIGH when the brake is pressed
-                #define reedPin            26 //HIGH when reed switch is on (magnet adjacent to sensor)
+                #define brakePin           26 //HIGH when the brake is pressed
+                #define reedPin            29 //HIGH when reed switch is on (magnet adjacent to sensor)
                 
                 //dashboard buttons
-                #define boostPin           27 //HIGH when the boost button is pressed
-                #define engineEnablePin    28 //HIGH when the gas engine enable button is pressed
-                #define motorEnablePin     29 //HIGH when the electric motor enable button is pressed
-                #define endurancePin       30 //HIGH when the endurance mode enable button is pressed
-                #define telemetryEnablePin 31 //HIGH when telemetry enable switch enabled
+                #define boostPin           25 //HIGH when the boost button is pressed
+                #define engineEnablePin    27 //HIGH when the gas engine enable button is pressed
+                #define motorEnablePin     28 //HIGH when the electric motor enable button is pressed
+                #define endurancePin       39 //HIGH when the endurance mode enable button is pressed
         
         //output pins
                  //PWM output pins
@@ -111,16 +111,19 @@
                  #define servoPin           2 //PWM output to servo handled by the Arduino Servo library
                  #define kellyPin           3 //PWM output to kelly
                  #define regenPin           4 //PWM Regen command to kelly
+                 #define radiatorFanPin     13//PWM output to control radiator fan
+                 #define energyLevelPin     5 //PWM output to energy level LED bar
                  
                  //digital output pins
                  
-                 #define powerIndicatorPin  32 //LED on the panel, which is on when the code is running
+                 #define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
                  #define criticalPin        33 //LED on the panel, tells if something is wrong
                  #define regenEnablePin     35 //Must be driven HIGH in order to regen
                  #define engineEnablePin    36 //Connected to a relay, needs to be HIGH in order to accelerate
                  #define hiVoltageEnablePin 37 //Is HIGH when the high voltage system is supposed to be on
                  #define moduleSleepPin     38 //Pauses the onboard telemetry module
-        
+                 #define clutchOutPin       52 //controls the clutch (is this still a feature?)
+
                  #define sevenSeg0Pin       44 // velocity sevenseg output bit 0
                  #define sevenSeg1Pin       45 // velocity sevenseg output bit 1
                  #define sevenSeg2Pin       46 // velocity sevenseg output bit 2
