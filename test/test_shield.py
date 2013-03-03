@@ -6,8 +6,8 @@ import curses
 from datetime import datetime
 
 
-#ser=serial.Serial('/dev/tty.usbmodem411')
-ser=serial.Serial('/dev/tty.usbmodem621')
+ser=serial.Serial('/dev/tty.usbmodem411')
+#ser=serial.Serial('/dev/tty.usbmodem621')
 
 stdscr=curses.initscr()
 stdscr.keypad(1)
@@ -33,6 +33,7 @@ clutch = 0
 assist = 0
 brake = 0
 engineEnable = 0
+hvEnable = 0
 
 
 
@@ -61,6 +62,8 @@ while 1:
         brake = items[1]
     elif items[0] == "EngineEnable":
         engineEnable = items[1]
+    elif items[0] == "HVEnable":
+        hvEnable = items[1]
     pad.addstr(0,0, "RPM:");pad.addstr(0,20,str(rpm))
     pad.addstr(1,0, "Temp:"); pad.addstr(1,20,str(temp))
     pad.addstr(2,0, "Low Battery:");pad.addstr(2,20,str(battlow))
@@ -71,6 +74,7 @@ while 1:
     pad.addstr(7,0, "Assist In:"); pad.addstr(7,20,str(assist))
     pad.addstr(8,0, "Brake In:"); pad.addstr(8,20,str(brake))
     pad.addstr(9,0, "Engine Enable:"); pad.addstr(9,20,str(engineEnable))
+    pad.addstr(10,0, "HV Enable:"); pad.addstr(10,20,str(hvEnable))
     stdscr.refresh()
     pad.refresh( 0,0, 5,5, 20,75)
     #print "RPM\t",rpm,"\tTemp\t",temp,"\tLow Battery\t",battlow,"\tFuelIn\t",fuelin,"\tThrottle\t",throttlein,"\tBMS Fault\t",bmsfault,"\tClutch\t",clutch,"\tAssist In\t",assist,"\tBrake In\t",brake
