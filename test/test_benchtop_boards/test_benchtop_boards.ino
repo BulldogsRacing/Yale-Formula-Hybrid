@@ -11,9 +11,11 @@ int servo_out =   2; //Digital (PWM)
 int kelly_out =   3; //Digital (PWM)
 int regen_out =   4; //Digital (PWM)
 int clutch_in =   24; //Digital
-int assist_in =   25; //Digital (PULLED LOW)
+int assist_in =   25; //Digital (PULLED HIGH)
 int brake_in =    26; //Digital
-int engineEnable = 27; //Digital
+int engineEnable= 27; //Digital
+int hvEnable =    28; //Digital
+int speed_in =    29; //Digital
 Servo servo, kelly, regen;
 
 
@@ -23,19 +25,22 @@ void setup() {
   pinMode(bms_fault,INPUT);
   pinMode(clutch_in,INPUT);
   pinMode(assist_in, INPUT);
+  digitalWrite(assist_in,HIGH); // Pull ASSIST_IN high
   pinMode(brake_in, INPUT);
   pinMode(engineEnable, INPUT);
+  pinMode(hvEnable, INPUT);
+  pinMode(speed_in, INPUT);
   servo.attach(servo_out);
   kelly.attach(kelly_out);
   regen.attach(regen_out);
   servo.write(90);
   kelly.write(0);
   regen.write(180);
-  
+
 }
 
 void loop() {
-  
+
   Serial.print("RPM ");
   Serial.println(analogRead(rpm_in));
   Serial.print("Temp ");
@@ -56,6 +61,11 @@ void loop() {
   Serial.println(digitalRead(brake_in));
   Serial.print("EngineEnable ");
   Serial.println(digitalRead(engineEnable));
-  
+  Serial.print("EngineEnable ");
+  Serial.println(digitalRead(engineEnable));
+  Serial.print("HVEnable ");
+  Serial.println(digitalRead(hvEnable));
+  Serial.print("SpeedIn ");
+  Serial.println(digitalRead(speed_in));
   delay(10);
 }
