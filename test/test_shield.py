@@ -35,6 +35,7 @@ brake = 0
 engineEnable = 0
 hvEnable = 0
 speedIn = 0
+regenMode = 0
 
 
 while 1:
@@ -66,6 +67,8 @@ while 1:
         hvEnable = items[1]
     elif items[0] == "SpeedIn":
         speedIn = items[1]
+    elif items[0] == "RegenMode":
+        regenMode = items[1]
     pad.addstr(0,0, "RPM:");pad.addstr(0,20,str(rpm))
     pad.addstr(1,0, "Temp:"); pad.addstr(1,20,str(temp))
     pad.addstr(2,0, "Low Battery:");pad.addstr(2,20,str(battlow))
@@ -78,6 +81,7 @@ while 1:
     pad.addstr(9,0, "Engine Enable:"); pad.addstr(9,20,str(engineEnable))
     pad.addstr(10,0, "HV Enable:"); pad.addstr(10,20,str(hvEnable))
     pad.addstr(11,0, "SpeedIn:"); pad.addstr(11,20,str(speedIn))
+    pad.addstr(12,0, "RegenMode:"); pad.addstr(12,20,str(speedIn))
     stdscr.refresh()
     pad.refresh( 0,0, 5,5, 20,75)
     #print "RPM\t",rpm,"\tTemp\t",temp,"\tLow Battery\t",battlow,"\tFuelIn\t",fuelin,"\tThrottle\t",throttlein,"\tBMS Fault\t",bmsfault,"\tClutch\t",clutch,"\tAssist In\t",assist,"\tBrake In\t",brake

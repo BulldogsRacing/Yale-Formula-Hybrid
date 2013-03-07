@@ -16,6 +16,7 @@ int brake_in =    26; //Digital
 int engineEnable= 27; //Digital
 int hvEnable =    28; //Digital
 int speed_in =    29; //Digital
+int regen_mode =  30; //Digital
 Servo servo, kelly, regen;
 
 
@@ -30,6 +31,7 @@ void setup() {
   pinMode(engineEnable, INPUT);
   pinMode(hvEnable, INPUT);
   pinMode(speed_in, INPUT);
+  pinMode(regen_mode, INPUT);
   servo.attach(servo_out);
   kelly.attach(kelly_out);
   regen.attach(regen_out);
@@ -67,5 +69,7 @@ void loop() {
   Serial.println(digitalRead(hvEnable));
   Serial.print("SpeedIn ");
   Serial.println(digitalRead(speed_in));
+  Serial.print("RegenMode ");
+  Serial.println(digitalRead(regen_mode));
   delay(10);
 }
