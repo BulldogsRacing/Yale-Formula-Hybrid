@@ -428,7 +428,7 @@ void runSecurityBlock(){
         BMSFault ==            true )
             // || virtualBigRedButton == true
 
-        {          
+        {
             criticalCycle = true;
             endloop = true;
             digitalWrite(criticalPin,HIGH);
@@ -454,7 +454,7 @@ void runSecurityBlock(){
             digitalWrite(criticalPin,LOW);}       
 
             //if the conditions are still critical, do not execute the main program body         
-    }        
+    }
 }
 
 
@@ -502,16 +502,16 @@ void runCommunication(){
 }
 
 
-void runTheCar(){    
+void runTheCar(){
 
     //---------------------------------------------------------------------------------------------
     // runTheCar MODES
     //---------------------------------------------------------------------------------------------
     //{
 
-    // 3.5.1 Autocross mode    
+    // 3.5.1 Autocross mode
     if (mode == AUTOCROSS_MODE && endloop == false)
-    {          
+    {
         engineOn = true;
         servoOut = throttle;
         regenEnable = false;
@@ -549,23 +549,6 @@ void runTheCar(){
 
         engineOn = true;
         servoOut = throttle;
-
-
-
-        if (brake == true && kellyEnable == true)
-        {//Motor regen
-            regenEnable = true;
-            regenOut = FULL_PWM;
-            kellyOut = 0;
-        }      
-        else if (brake == false && throttle == SERVO_MIN_ANGLE && kellyEnable == true){
-            regenEnable = true;
-            regenOut = 255*ENDURANCE_IDLE_REGEN_PERCENT/100;
-        }
-        else{
-            regenEnable = false;
-            regenOut = 0;
-        }
 
 
         //If assist button is pressed, motor engages
@@ -720,7 +703,7 @@ void serialWriteValue(int value,int ID) {
     //If the ID has two digits, move the index one place forward
     if (ID>9) {
         writeBuffer[writeIndex] = c[1];
-        writeIndex++; 
+        writeIndex++;
     }
     //Write the '=' to the buffer par the protocol
     writeBuffer[writeIndex] = '=';
@@ -966,7 +949,7 @@ void debug(int outint){
 }
 
 //Custom debugging delay function exist to be able to find it using find "debug"
-//No delay() functions are supposed to be in the program flow      
+//No delay() functions are supposed to be in the program flow
 void debugDelay(int ms) {delay(ms);}
 
 //}
@@ -975,9 +958,9 @@ void debugDelay(int ms) {delay(ms);}
 //---------------------------------------------------------------------------------------------
 //{
 
-//steals power from motor and engine, used to stop the car when 
+//steals power from motor and engine, used to stop the car when
 //Virtual Big Red Button is activated or in critical cycle
-void kill() 
+void kill()
 {
     digitalWrite(engineEnablePin, LOW);
     digitalWrite(hiVoltageEnablePin, HIGH);
@@ -990,7 +973,7 @@ void kill()
 
 //Creates various kill scenarios, 4 types, occur timeInSeconds after program initiation
 //Used for testing, add after the processInputs() function
-void doScenario(int type, int timeInSeconds)  
+void doScenario(int type, int timeInSeconds)
 {
     unsigned long time = timeInSeconds * 1000;
     if (millis() > time)
@@ -1035,7 +1018,7 @@ void setup()
 {
 
 
-    //Input pins setup       
+    //Input pins setup
     pinMode(hiVoltageLoBattPin,INPUT);
     pinMode(BMSFaultPin,       INPUT);
     pinMode(clutchPin,         INPUT);
@@ -1061,7 +1044,7 @@ void setup()
     pinMode(hiVoltageEnablePin,OUTPUT);
     digitalWrite(hiVoltageEnablePin, LOW);
 
-    pinMode(moduleSleepPin,    OUTPUT);     
+    pinMode(moduleSleepPin,    OUTPUT);
 
     pinMode(sevenSeg0Pin, OUTPUT);
     pinMode(sevenSeg1Pin, OUTPUT);
