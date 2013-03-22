@@ -1,9 +1,3 @@
-//todo:
-//    endurance power limit w/ dial
-//    compensate for engine torque curve in autocross mode: map power to function
-//    boost button: overrides any mode and puts motor => 100%, esp to help w/ launch control.  and, motor still runs even when clutch is enabled
-//    refactor to run based on dashboard button values rather than "modes"
-
 /*
 
 ### FSAE PROGRAM FOR ARDUINO ###
