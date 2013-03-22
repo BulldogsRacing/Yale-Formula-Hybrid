@@ -520,6 +520,7 @@ void runTheCar(){
 
     // Boost overrides
     // if boost button pressed, drive max motor, and scale throttle to max val
+    // note: this overrides the clutch override, must come afterwards!
     if (boost){
         servoOut = throttle;
         kellyOut = FULL_PWM;
@@ -527,6 +528,7 @@ void runTheCar(){
 
     // Braking overrides
     // if braking, don't drive engine or motor
+    // this override should come LAST in the override order for safety reasons
     if (brake == true){
         kellyOut = 0;
         servoOut = 0;
