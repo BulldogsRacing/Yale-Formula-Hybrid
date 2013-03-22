@@ -109,7 +109,6 @@ problems with engine occur.
 #define servoPin           2 //PWM output to servo handled by the Arduino Servo library
 #define kellyPin           3 //PWM output to kelly
 #define regenPin           4 //PWM Regen command to kelly
-#define radiatorFanPin     13//PWM output to control radiator fan
 #define energyLevelPin     5 //PWM output to energy level LED bar
 
 //digital output pins
@@ -120,7 +119,6 @@ problems with engine occur.
 #define engineEnablePin    36 //Connected to a relay, needs to be HIGH in order to accelerate
 #define hiVoltageEnablePin 37 //Is HIGH when the high voltage system is supposed to be on
 #define moduleSleepPin     38 //Pauses the onboard telemetry module
-#define clutchOutPin       52 //controls the clutch (is this still a feature?)
 
 #define sevenSeg0Pin       44 // velocity sevenseg output bit 0
 #define sevenSeg1Pin       45 // velocity sevenseg output bit 1
