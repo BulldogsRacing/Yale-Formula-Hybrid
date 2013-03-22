@@ -362,16 +362,12 @@ void processInputs(){
     if(modeEndurance == false)      mode = AUTOCROSS_MODE;
     else if (modeEndurance == true) mode = ENDURANCE_MODE;
 
-    //Mapping of analog throttle to useful values
-    //Throttle scaled from 0 to 180, used for servo.write()
-    if      (throttleAnalog < THROTTLE_SCALE_MIN) throttle = SERVO_MIN_ANGLE;
-    else if (throttleAnalog > THROTTLE_SCALE_MAX) throttle = SERVO_MAX_ANGLE;
-    else     throttle = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE); 
+    //constrain throttle analog value between calibrated values
+    throttleAnalog = constrain(throttleAnalog, THROTTLE_SCALE_MIN, THROTTLE_SCALE_MAX);
 
-    //Throttle scaled from 0 to 255, used for analogWrite() to Kelly
-    if (throttleAnalog < THROTTLE_SCALE_MIN) throttleKelly = 0;
-    else if (throttleAnalog > THROTTLE_SCALE_MAX) throttleKelly = FULL_PWM;
-    else throttleKelly = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,0,FULL_PWM);
+    //map throttle analog to servo and Kelly-PWM appropriate values
+    throttle = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE); 
+    throttleKelly = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,0,FULL_PWM);
 
     //Calculation of velocity from the reed switch on the wheel
     if (digitalRead(reedPin) == LOW)
