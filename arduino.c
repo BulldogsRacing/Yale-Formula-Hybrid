@@ -95,7 +95,7 @@ There is also a boost button that delivers max motor power in any scenario.
 //dashboard buttons
 #define boostPin           25 //HIGH when the boost button is pressed
 #define engineEnableInPin  27 //HIGH when the gas engine enable button is pressed
-#define motorEnablePin     28 //HIGH when the electric motor enable button is pressed
+#define hvEnableInPin      28 //HIGH when the electric motor enable button is pressed
 #define endurancePin       39 //HIGH when the endurance mode enable button is pressed
 
 //output pins
@@ -110,7 +110,7 @@ There is also a boost button that delivers max motor power in any scenario.
 #define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
 #define criticalPin        33 //LED on the panel, tells if something is wrong
 #define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
-#define hiVoltageEnablePin 37 //Is HIGH when the high voltage system is supposed to be on
+#define hvEnableOutPin     37 //Is HIGH when the high voltage system is supposed to be on
 #define moduleSleepPin     38 //Pauses the onboard telemetry module
 
 #define sevenSeg0Pin       44 // velocity sevenseg output bit 0
@@ -238,18 +238,18 @@ boolean assist =              false; //Is true if the assist/boost button is pre
 boolean brake =               false; //Is true if the brake pedal is pressed
 boolean servoEnable =         false; //Is true if the servoEnable switch is on
 boolean kellyEnable =         false; //Is true if the kellyEnable switch is on
+boolean engineEnable =        false; //Is true if engine enable switch is on
+boolean hvEnable =            false; //Is true if HV enable switch is on
 boolean modeEndurance =       false; //Is true if the mode selector is on Endurance
 boolean modeElectric =        false; //Is true if the mode selector is on Electric
 boolean telemetryEnable =     false; //Telemetry on/off switch
+
 //Outputs
-boolean engineEnable =        false; //True value is needed to use the engine
-boolean hiVoltageEnable =     false; //True value sets the high voltage system on
 boolean moduleSleep =         false; //True value sets the telemetry module asleep
 
 boolean reedOffPrevious =     false; //Is true when the reed was HIGH (not at the magnet) in the previous loop,
 //so velocity calculation will occur immediately
 //after it is turned HIGH
-boolean engineOn        =     false; //determines if engine is on in each loop
 boolean assisting          =  false;
 
 //analog variables are in the scope of 0-1023, as read from the sensors.
@@ -335,8 +335,10 @@ void readInputs(){
     assist =            (digitalRead(assistPin) ==          HIGH);
     servoEnable =       (digitalRead(servoEnablePin) ==     LOW);
     kellyEnable =       (digitalRead(kellyEnablePin) ==     LOW);
+    engineEnable =      (digitalRead(engineEnableInPin)) == LOW);
+    hvEnable =          (digitalRead(hvEnableInPin)) ==     LOW);
 
-    if(hiVoltageEnable==true) brake =(digitalRead(brakePin) ==     LOW);  //the brake is only checked if HV is enabled,
+    if(hvEnable==true) brake =(digitalRead(brakePin) ==     LOW);  //the brake is only checked if HV is enabled,
     else brake = false;                                                     //otherwise set to false
 
     modeEndurance =     (digitalRead(modeEndurancePin) ==   LOW);
@@ -352,7 +354,7 @@ void processInputs(){
     radiatorTemp = map(radiatorTempAnalog,0,1023, RADIATORTEMP_SCALE_MAX, 0);//in degrees F  (yes this is correct, increased temp -> lower signal)
     fuel      =    map(fuelAnalog,        0,1023, 0,100);                   //in percent
 
-    //The mode is made of the two digital pins
+    //endurance mode button determines mode
     if(modeEndurance == false)      mode = AUTOCROSS_MODE;
     else if (modeEndurance == true) mode = ENDURANCE_MODE;
 
@@ -482,71 +484,18 @@ void runTheCar(){
     //---------------------------------------------------------------------------------------------
     //{
 
-    // 3.5.1 Autocross mode
+    // Autocross mode
     if (mode == AUTOCROSS_MODE && endloop == false)
     {
-        engineOn = true;
         servoOut = throttle;
-
-        //If assist button is pressed, motor engages
-        if(throttle > THROTTLE_ENGAGE_ASSIST && assisting == false){
-            assisting = true;
-        }
-        else if(throttle < THROTTLE_DISENGAGE_ASSIST && assisting == true){
-            assisting = false;
-        }
-
-
-        if ((assist == true || assisting == true)){
-            hiVoltageEnable = true;
-            if(brake == false){
-                kellyOut = AUTOCROSS_ASSIST;
-            }
-            else{
-                kellyOut = 0;
-            }
-        }
-        else{
-            hiVoltageEnable = false;
-            kellyOut = 0;
-        }
-
+        kellyOut = throttleKelly;
     }
 
-    // 3.5.2 Endurance mode 
+    // Endurance mode 
     else if (mode == ENDURANCE_MODE && endloop == false)
     {       
-        hiVoltageEnable = true;
-
-        engineOn = true;
         servoOut = throttle;
-
-
-        //If assist button is pressed, motor engages
-        if(throttle > THROTTLE_ENGAGE_ASSIST && assisting == false){
-            assisting = true;
-        }
-        else if(throttle < THROTTLE_DISENGAGE_ASSIST && assisting == true){
-            assisting = false;
-        }
-
-
-        if ((assist == true || assisting == true)){
-            if(brake == false){
-                if(assist == true){
-                    kellyOut = ENDURANCE_ASSIST;
-                }
-                else if(assisting == true){
-                    kellyOut = AUTOCROSS_ASSIST;
-                }
-            }
-            else{
-                kellyOut = 0;
-            }
-        }
-        else{
-            kellyOut = 0;
-        }            
+                   
     } //end of endurance mode
 
     //boost button overrides
@@ -561,12 +510,12 @@ void runTheCar(){
     //send velocity to seven seg display
     sevenSegOut();
 
-    //Turn the engine relay on if there is an output to engine
-    if (engineOn == true) {digitalWrite(engineEnableOutPin, HIGH);}
-    else                  {digitalWrite(engineEnableOutPin, LOW);}
+    //Turn the engine relay on if engine enable switch is on
+    if (engineEnable == true) {digitalWrite(engineEnableOutPin, HIGH);}
+    else                      {digitalWrite(engineEnableOutPin, LOW);}
 
-    if (hiVoltageEnable == true) {digitalWrite(hiVoltageEnablePin, HIGH);}
-    else                         {digitalWrite(hiVoltageEnablePin, LOW);}
+    if (hvEnable == true) {digitalWrite(hvEnableOutPin, HIGH);}
+    else                  {digitalWrite(hvEnableOutPin, LOW);}
 
     //Don't accelerate when braking
     if (brake == true){
@@ -579,11 +528,11 @@ void runTheCar(){
     else throttleServo.write(SERVO_MIN_ANGLE); //Reset the servo if servoEnable is false
 
     //Send output to kelly
-    if(kellyEnable==true&&hiVoltageEnable==true&&hiVoltageLoBatt == false){                 
+    if(kellyEnable==true && hvEnable==true && hiVoltageLoBatt == false){                 
         analogWrite(kellyPin,kellyOut);
     }
     else {
-        analogWrite (kellyPin,0);
+        analogWrite(kellyPin,0);
     }
 
     //}
@@ -802,8 +751,8 @@ void testTheCar(){
 
     digitalWrite(engineEnableOutPin, HIGH);
 
-    if (mode == ELECTRIC_MODE) digitalWrite(hiVoltageEnablePin, HIGH);  //Allow High Voltage to be ON for testing if required
-    else digitalWrite(hiVoltageEnablePin, LOW);                         //Might need it for programming BMS/Kelly
+    if (mode == ELECTRIC_MODE) digitalWrite(hvEnableOutPin, HIGH);  //Allow High Voltage to be ON for testing if required
+    else digitalWrite(hvEnableOutPin, LOW);                         //Might need it for programming BMS/Kelly
 
     if (brake == true)
     {
@@ -860,7 +809,7 @@ void debugDelay(int ms) {delay(ms);}
 void kill()
 {
     digitalWrite(engineEnableOutPin, LOW);
-    digitalWrite(hiVoltageEnablePin, HIGH);
+    digitalWrite(hvEnableOutPin, HIGH);
     servoOut = SERVO_MIN_ANGLE;
     kellyOut = 0;
     throttleServo.write(servoOut);
@@ -934,8 +883,8 @@ void setup()
     pinMode(engineEnableOutPin,     OUTPUT);
     digitalWrite(engineEnableOutPin, LOW);
 
-    pinMode(hiVoltageEnablePin,OUTPUT);
-    digitalWrite(hiVoltageEnablePin, LOW);
+    pinMode(hvEnableOutPin,OUTPUT);
+    digitalWrite(hvEnableOutPin, LOW);
 
     pinMode(moduleSleepPin,    OUTPUT);
 
