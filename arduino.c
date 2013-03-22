@@ -336,13 +336,13 @@ void readInputs(){
     BMSFault =          (digitalRead(BMSFaultPin) ==        LOW);
     clutchPressed =     (digitalRead(clutchPin) ==          LOW);
     boost =             (digitalRead(boostPin) ==          HIGH);
-    engineEnable =      (digitalRead(engineEnableInPin)) == LOW);
-    hvEnable =          (digitalRead(hvEnableInPin)) ==     LOW);
+    engineEnable =      (digitalRead(engineEnableInPin)  == LOW);
+    hvEnable =          (digitalRead(hvEnableInPin) ==     LOW);
 
     if(hvEnable==true) brake =(digitalRead(brakePin) ==     LOW);  //the brake is only checked if HV is enabled,
     else brake = false;                                                     //otherwise set to false
 
-    modeEndurance =     (digitalRead(modeEndurancePin) ==   LOW);
+    modeEndurance =     (digitalRead(endurancePin) ==   LOW);
     telemetryEnable =   (digitalRead(telemetryEnablePin) == LOW);
 
 }
