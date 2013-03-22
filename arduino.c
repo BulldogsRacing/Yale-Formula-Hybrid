@@ -485,21 +485,32 @@ void runTheCar(){
     // runTheCar MODES
     //---------------------------------------------------------------------------------------------
     //{
+    
+    // ===================
+    // MAIN MODE LOGIC
+    // ===================
 
-    // Autocross mode
+    // Autocross mode logic
     if (mode == AUTOCROSS_MODE && endloop == false)
     {
         servoOut = throttle;
         kellyOut = throttleKelly;
     }
 
-    // Endurance mode 
+    // Endurance mode logic
     else if (mode == ENDURANCE_MODE && endloop == false)
     {       
         servoOut = throttle * enduranceMultiplier;
         kellyOut = throttleKelly * enduranceMultiplier;
                    
-    } //end of endurance mode
+    }
+
+    // ===================
+    // OVERRIDES
+    // ===================
+
+    // These override the basic output logic based on various inputs.
+    // The order in which the overrides are applied is very important! Be careful switching order.
 
     // Boost overrides
     // if boost button pressed, drive max motor, and scale throttle to max val
