@@ -336,7 +336,6 @@ void readInputs(){
     BMSFault =          (digitalRead(BMSFaultPin) ==        LOW);
     clutchPressed =     (digitalRead(clutchPin) ==          LOW);
     boost =             (digitalRead(boostPin) ==          HIGH);
-    servoEnable =       (digitalRead(servoEnablePin) ==     LOW);
     kellyEnable =       (digitalRead(kellyEnablePin) ==     LOW);
     engineEnable =      (digitalRead(engineEnableInPin)) == LOW);
     hvEnable =          (digitalRead(hvEnableInPin)) ==     LOW);
@@ -897,7 +896,6 @@ void setup()
     pinMode(clutchPin,         INPUT);
     pinMode(assistPin,         INPUT);
     pinMode(brakePin,          INPUT);
-    pinMode(servoEnablePin,    INPUT);
     pinMode(kellyEnablePin,    INPUT);
     pinMode(reedPin,           INPUT);
     pinMode(telemetryEnablePin,INPUT);
