@@ -512,6 +512,12 @@ void runTheCar(){
     // These override the basic output logic based on various inputs.
     // The order in which the overrides are applied is very important! Be careful switching order.
 
+    // Clutch override
+    // if clutch pressed, don't drive the motor
+    if (clutchPressed){
+        kellyOut = 0;
+    }
+
     // Boost overrides
     // if boost button pressed, drive max motor, and scale throttle to max val
     if (boost){
