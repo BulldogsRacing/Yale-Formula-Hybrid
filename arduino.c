@@ -10,13 +10,12 @@
 
 --------ABOUT-------------------------------------------------------------------
 
-version 0.2
-by Jan Kolmas, Geoffrey Litt, Stephen Hall, et al.
+by Jan Kolmas, Geoffrey Litt, Stephen Hall, Alex Carrillo, and others...
 
 Written for the Yale FSAE formula racing team.
 
 The code is designed to run on an Arduino Mega 2560.
-It is written in Arduino C programming language.
+It is written in Arduino programming language.
 
 It is designed ro run a hybrid car with an electric motor and a gas engine
 capable of regen.
@@ -26,16 +25,13 @@ The purpose of the code is to take data from sensors, evaluate it and input
 power to the motor and the engine. It also handles some of the dashboard
 indicators and telemetry communication. 
 
-The car can run in three modes:
+The Arduino program has two modes:
 
-Autocross: Fastest as possible. Main power source is the engine and the
-motor is assisting at driver's will.
-Endurance: Make the best out of the available energy. Saves energy by
-shutting the engine down and running on electric only if
-ineffective or low on fuel.
-Electric:  Uses the electric motor only. Useful for manipulation or when
-problems with engine occur.
+Autocross: Fast as possible. Engine and motor both powered to max
+Endurance: Save energy. Limit engine and motor to certain % power, based on
+					 value of the endurance dial input
 
+There is also a boost button that delivers max motor power in any scenario.
 
 --------CODE STRUCTURE----------------------------------------------------------
 
