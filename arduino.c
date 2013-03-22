@@ -837,7 +837,7 @@ void debugDelay(int ms) {delay(ms);}
 void kill()
 {
     digitalWrite(engineEnableOutPin, LOW);
-    digitalWrite(hvEnableOutPin, HIGH);
+    digitalWrite(hvEnableOutPin, LOW);
     servoOut = SERVO_MIN_ANGLE;
     kellyOut = 0;
     throttleServo.write(servoOut);
