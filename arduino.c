@@ -547,7 +547,7 @@ void runTheCar(){
     else                  {digitalWrite(hvEnableOutPin, LOW);}
 
     //Send output to servo
-    if(servoEnable==true&&engineOn==true)  throttleServo.write(servoOut);
+    if(servoEnable==true && engineEnable == true)  throttleServo.write(servoOut);
     else throttleServo.write(SERVO_MIN_ANGLE); //Reset the servo if servoEnable is false
 
     //Send output to kelly
@@ -774,8 +774,8 @@ void testTheCar(){
 
     digitalWrite(engineEnableOutPin, HIGH);
 
-    if (mode == ELECTRIC_MODE) digitalWrite(hvEnableOutPin, HIGH);  //Allow High Voltage to be ON for testing if required
-    else digitalWrite(hvEnableOutPin, LOW);                         //Might need it for programming BMS/Kelly
+    if(hvEnable) digitalWrite(hvEnableOutPin, HIGH);
+    else         digitalWrite(hvEnableOutPin, LOW);
 
     if (brake == true)
     {
@@ -890,10 +890,9 @@ void setup()
     pinMode(hiVoltageLoBattPin,INPUT);
     pinMode(BMSFaultPin,       INPUT);
     pinMode(clutchPin,         INPUT);
-    pinMode(assistPin,         INPUT);
+    pinMode(boostPin,         INPUT);
     pinMode(brakePin,          INPUT);
     pinMode(reedPin,           INPUT);
-    pinMode(telemetryEnablePin,INPUT);
 
     //Output pins setup (set some to low to begin, for safety)
     pinMode(powerIndicatorPin,   OUTPUT);
