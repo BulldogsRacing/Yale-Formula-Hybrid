@@ -81,7 +81,6 @@ There is also a boost button that delivers max motor power in any scenario.
 #define throttlePin        A4 //throttle amount - from the pedal
 #define radiatorTempPin    A1 //Temperature of the radiator 
 #define fuelPin            A3 //fuel level sensor
-#define regenDialPin       A5 //what is this?
 #define enduranceDialPin   A6 //what is this?
 
 //digital input pins  
@@ -104,14 +103,12 @@ There is also a boost button that delivers max motor power in any scenario.
 
 #define servoPin           2 //PWM output to servo handled by the Arduino Servo library
 #define kellyPin           3 //PWM output to kelly
-#define regenPin           4 //PWM Regen command to kelly
 #define energyLevelPin     5 //PWM output to energy level LED bar
 
 //digital output pins
 
 #define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
 #define criticalPin        33 //LED on the panel, tells if something is wrong
-#define regenEnablePin     35 //Must be driven HIGH in order to regen
 #define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
 #define hiVoltageEnablePin 37 //Is HIGH when the high voltage system is supposed to be on
 #define moduleSleepPin     38 //Pauses the onboard telemetry module
@@ -182,12 +179,8 @@ const int kTelemetryDataCommandSetCarEnableState =         15;
 //{
 const int AUTOCROSS_MODE = 1;        //Shortcuts for the mode selector
 const int ENDURANCE_MODE = 2;
-const int ELECTRIC_MODE =  3;
-const int ELECTRICREGEN_MODE = 4;
 
 const int FULL_PWM =      255;           //Maximum PWM output 
-const int ENDURANCE_IDLE_REGEN_PERCENT = 10;           //Regen when throttle is not pressed
-const int ELECTRIC_IDLE_REGEN_PERCENT = 50;   
 const int ENDURANCE_ASSIST = 0;
 const int AUTOCROSS_ASSIST = FULL_PWM;
 
@@ -210,8 +203,6 @@ const int SERVO_MIN =       900;     // pulse width range for the servo in ms fo
 const int SERVO_MAX =      2100;
 const int SERVO_MIN_ANGLE =   0;     //Limits of throttle servo output angle. !adjust  
 const int SERVO_MAX_ANGLE = 160;
-const int THROTTLE_ENGAGE_ASSIST = SERVO_MAX_ANGLE - 5;
-const int THROTTLE_DISENGAGE_ASSIST = SERVO_MAX_ANGLE - 20;
 
 const float WHEEL_CIRCUMFERENCE = 66; // in inches
 const float VELOCITY_SCALAR = 56.82;  //This converts from feet/ms to mph
@@ -251,7 +242,6 @@ boolean modeEndurance =       false; //Is true if the mode selector is on Endura
 boolean modeElectric =        false; //Is true if the mode selector is on Electric
 boolean telemetryEnable =     false; //Telemetry on/off switch
 //Outputs
-boolean regenEnable =         false; //True value allows regen
 boolean engineEnable =        false; //True value is needed to use the engine
 boolean hiVoltageEnable =     false; //True value sets the high voltage system on
 boolean moduleSleep =         false; //True value sets the telemetry module asleep
@@ -272,7 +262,6 @@ int radiatorTempAnalog = 0;
 //These variables are sent to the servo and kelly
 int servoOut =           0;
 int kellyOut =           0;
-int regenOut =           0;
 
 //Logical switches controlling the program flow
 boolean virtualBigRedButton = false;   //Received via serial
@@ -351,7 +340,6 @@ void readInputs(){
     else brake = false;                                                     //otherwise set to false
 
     modeEndurance =     (digitalRead(modeEndurancePin) ==   LOW);
-    modeElectric =      (digitalRead(modeElectricPin) ==    LOW);
     telemetryEnable =   (digitalRead(telemetryEnablePin) == LOW);
 
 }
@@ -365,10 +353,8 @@ void processInputs(){
     fuel      =    map(fuelAnalog,        0,1023, 0,100);                   //in percent
 
     //The mode is made of the two digital pins
-    if(modeEndurance == false && modeElectric == false)      mode = AUTOCROSS_MODE;
-    else if (modeEndurance == true && modeElectric == false) mode = ENDURANCE_MODE;
-    else if (modeElectric == true && modeEndurance == false) mode = ELECTRIC_MODE;
-    else if (modeElectric == true && modeEndurance == true)  mode = ELECTRICREGEN_MODE;
+    if(modeEndurance == false)      mode = AUTOCROSS_MODE;
+    else if (modeEndurance == true) mode = ENDURANCE_MODE;
 
     //Mapping of analog throttle to useful values
     //Throttle scaled from 0 to 180, used for servo.write()
@@ -501,8 +487,6 @@ void runTheCar(){
     {
         engineOn = true;
         servoOut = throttle;
-        regenEnable = false;
-        regenOut = 0;
 
         //If assist button is pressed, motor engages
         if(throttle > THROTTLE_ENGAGE_ASSIST && assisting == false){
@@ -529,7 +513,7 @@ void runTheCar(){
 
     }
 
-    // 3.5.2 Endurance mode ( = Autocross with regen)
+    // 3.5.2 Endurance mode 
     else if (mode == ENDURANCE_MODE && endloop == false)
     {       
         hiVoltageEnable = true;
@@ -565,51 +549,9 @@ void runTheCar(){
         }            
     } //end of endurance mode
 
-    // 3.5.3 Electric only mode    
-    else if (mode == ELECTRIC_MODE && endloop == false)
-    {
-        hiVoltageEnable = true;
-        regenEnable = false;
-        regenOut = 0;
-        engineOn = false;
-        servoOut = SERVO_MIN_ANGLE;
-        if(brake == false && hiVoltageLoBatt == false){
-            kellyOut = throttleKelly;
-        }
-        else{
-            kellyOut = 0;
-        }
+    //boost button overrides
 
 
-    }
-
-    // 3.5.4 Electric mode with regen (for testing)
-    else if (mode == ELECTRICREGEN_MODE){
-        hiVoltageEnable = true;
-        engineOn = false;
-        servoOut = SERVO_MIN_ANGLE;
-        if(brake == false && hiVoltageLoBatt == false){
-            kellyOut = throttleKelly;
-        }
-        else{
-            kellyOut = 0;
-        }
-
-        if(throttle == SERVO_MIN_ANGLE && brake == false){
-            regenEnable = true;
-            regenOut = 255*ELECTRIC_IDLE_REGEN_PERCENT/100;
-
-        }
-        else if(throttle == SERVO_MIN_ANGLE && brake == true){
-            regenEnable = true;
-            int regenOut = FULL_PWM;
-        }
-        else{
-            regenEnable = false;
-            regenOut = 0;
-        }
-
-    }
     //}
     //---------------------------------------------------------------------------------------------
     // runTheCar OUTPUT
@@ -630,17 +572,6 @@ void runTheCar(){
     if (brake == true){
         kellyOut = 0;
         servoOut = 0;
-    }
-
-
-    //Output regen if enabled
-    if (regenEnable == true){
-        digitalWrite(regenEnablePin, HIGH);
-        analogWrite(regenPin,regenOut);
-    }
-    else{
-        digitalWrite(regenEnablePin, LOW);
-        analogWrite(regenPin,0);
     }
 
     //Send output to servo
@@ -864,27 +795,6 @@ void sevenSegOut() {  // takes velocity and outputs appropriate binary signals
 //---------------------------------------------------------------------------------------------
 //{
 
-void regenTest(){
-    runSecurityBlock();
-    if(endloop == false){
-
-        if(mode == ELECTRIC_MODE && throttle == SERVO_MIN_ANGLE){
-            //digitalWrite(hiVoltageEnablePin,HIGH); THIS IS ALREADY IN TESTTHECAR
-            digitalWrite(regenEnablePin,HIGH);
-            int percentRegen = 50;
-            int regen = 255*percentRegen/100;
-            analogWrite(regenPin,regen);
-        }
-        else
-        {
-            digitalWrite(regenEnablePin,LOW);
-
-            analogWrite(regenPin,0);
-        }
-        testTheCar();
-    }
-}
-
 void testTheCar(){
 
     servoOut = throttle;
@@ -951,7 +861,6 @@ void kill()
 {
     digitalWrite(engineEnableOutPin, LOW);
     digitalWrite(hiVoltageEnablePin, HIGH);
-    digitalWrite(regenEnablePin, LOW);
     servoOut = SERVO_MIN_ANGLE;
     kellyOut = 0;
     throttleServo.write(servoOut);
@@ -1022,9 +931,6 @@ void setup()
     pinMode(criticalPin,       OUTPUT);
     digitalWrite(criticalPin, LOW);
 
-    pinMode(regenEnablePin,    OUTPUT);
-    digitalWrite(regenEnablePin, LOW);
-
     pinMode(engineEnableOutPin,     OUTPUT);
     digitalWrite(engineEnableOutPin, LOW);
 
@@ -1091,7 +997,6 @@ void loop()
 
     //Modes, servo and kelly output commands
     if(endloop == false){
-        //regenTest();
         runTheCar();
     }
 
