@@ -235,7 +235,7 @@ int enduranceLimit = 0;              //endurance dial limit, scaled from 0 to 10
 boolean hiVoltageLoBatt =     false; //Is true if the battery level is low
 boolean BMSFault =            false; //Is true if there is a problem with the Lithium-Ions. 
 boolean clutchPressed =       false; //Is true if the clutch is pressed
-boolean assist =              false; //Is true if the assist/boost button is pressed
+boolean boost =              false; //Is true if the assist/boost button is pressed
 boolean brake =               false; //Is true if the brake pedal is pressed
 boolean servoEnable =         false; //Is true if the servoEnable switch is on
 boolean kellyEnable =         false; //Is true if the kellyEnable switch is on
@@ -335,7 +335,7 @@ void readInputs(){
     hiVoltageLoBatt =   (digitalRead(hiVoltageLoBattPin) == LOW);
     BMSFault =          (digitalRead(BMSFaultPin) ==        LOW);
     clutchPressed =     (digitalRead(clutchPin) ==          LOW);
-    assist =            (digitalRead(assistPin) ==          HIGH);
+    boost =             (digitalRead(boostPin) ==          HIGH);
     servoEnable =       (digitalRead(servoEnablePin) ==     LOW);
     kellyEnable =       (digitalRead(kellyEnablePin) ==     LOW);
     engineEnable =      (digitalRead(engineEnableInPin)) == LOW);
@@ -501,7 +501,19 @@ void runTheCar(){
                    
     } //end of endurance mode
 
-    //boost button overrides
+    // Boost overrides
+    // if boost button pressed, drive max motor, and scale throttle to max val
+    if (boost){
+        servoOut = throttle;
+        kellyOut = FULL_PWM;
+    }
+
+    // Braking overrides
+    // if braking, don't drive engine or motor
+    if (brake == true){
+        kellyOut = 0;
+        servoOut = 0;
+    }
 
     //}
     //---------------------------------------------------------------------------------------------
@@ -516,14 +528,9 @@ void runTheCar(){
     if (engineEnable == true) {digitalWrite(engineEnableOutPin, HIGH);}
     else                      {digitalWrite(engineEnableOutPin, LOW);}
 
+    //Turn HV on if HV enable switch is on
     if (hvEnable == true) {digitalWrite(hvEnableOutPin, HIGH);}
     else                  {digitalWrite(hvEnableOutPin, LOW);}
-
-    //Don't accelerate when braking
-    if (brake == true){
-        kellyOut = 0;
-        servoOut = 0;
-    }
 
     //Send output to servo
     if(servoEnable==true&&engineOn==true)  throttleServo.write(servoOut);
