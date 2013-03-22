@@ -99,7 +99,7 @@ problems with engine occur.
 
 //dashboard buttons
 #define boostPin           25 //HIGH when the boost button is pressed
-#define engineEnablePin    27 //HIGH when the gas engine enable button is pressed
+#define engineEnableInPin  27 //HIGH when the gas engine enable button is pressed
 #define motorEnablePin     28 //HIGH when the electric motor enable button is pressed
 #define endurancePin       39 //HIGH when the endurance mode enable button is pressed
 
@@ -116,7 +116,7 @@ problems with engine occur.
 #define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
 #define criticalPin        33 //LED on the panel, tells if something is wrong
 #define regenEnablePin     35 //Must be driven HIGH in order to regen
-#define engineEnablePin    36 //Connected to a relay, needs to be HIGH in order to accelerate
+#define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
 #define hiVoltageEnablePin 37 //Is HIGH when the high voltage system is supposed to be on
 #define moduleSleepPin     38 //Pauses the onboard telemetry module
 
@@ -631,8 +631,8 @@ void runTheCar(){
     sevenSegOut();
 
     //Turn the engine relay on if there is an output to engine
-    if (engineOn == true) {digitalWrite(engineEnablePin, HIGH);}
-    else                  {digitalWrite(engineEnablePin, LOW);}
+    if (engineOn == true) {digitalWrite(engineEnableOutPin, HIGH);}
+    else                  {digitalWrite(engineEnableOutPin, LOW);}
 
     if (hiVoltageEnable == true) {digitalWrite(hiVoltageEnablePin, HIGH);}
     else                         {digitalWrite(hiVoltageEnablePin, LOW);}
@@ -901,7 +901,7 @@ void testTheCar(){
     servoOut = throttle;
     kellyOut = throttleKelly;
 
-    digitalWrite(engineEnablePin, HIGH);
+    digitalWrite(engineEnableOutPin, HIGH);
 
     if (mode == ELECTRIC_MODE) digitalWrite(hiVoltageEnablePin, HIGH);  //Allow High Voltage to be ON for testing if required
     else digitalWrite(hiVoltageEnablePin, LOW);                         //Might need it for programming BMS/Kelly
@@ -960,7 +960,7 @@ void debugDelay(int ms) {delay(ms);}
 //Virtual Big Red Button is activated or in critical cycle
 void kill()
 {
-    digitalWrite(engineEnablePin, LOW);
+    digitalWrite(engineEnableOutPin, LOW);
     digitalWrite(hiVoltageEnablePin, HIGH);
     digitalWrite(regenEnablePin, LOW);
     servoOut = SERVO_MIN_ANGLE;
@@ -1036,8 +1036,8 @@ void setup()
     pinMode(regenEnablePin,    OUTPUT);
     digitalWrite(regenEnablePin, LOW);
 
-    pinMode(engineEnablePin,     OUTPUT);
-    digitalWrite(engineEnablePin, LOW);
+    pinMode(engineEnableOutPin,     OUTPUT);
+    digitalWrite(engineEnableOutPin, LOW);
 
     pinMode(hiVoltageEnablePin,OUTPUT);
     digitalWrite(hiVoltageEnablePin, LOW);
