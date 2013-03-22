@@ -81,7 +81,7 @@ There is also a boost button that delivers max motor power in any scenario.
 #define throttlePin        A4 //throttle amount - from the pedal
 #define radiatorTempPin    A1 //Temperature of the radiator 
 #define fuelPin            A3 //fuel level sensor
-#define enduranceDialPin   A6 //what is this?
+#define enduranceDialPin   A6 //sets endurance power limit
 
 //digital input pins  
 
@@ -228,6 +228,7 @@ int fuel =          0;               //In percent
 int throttle =      0;               //For the servo, scaled from 0 to 180 (degrees)
 int throttleKelly = 0;               //For the kelly, scaled from 0 to 255 (PWM)
 int radiatorTemp =  0;               //In degrees Fahrenheit
+int enduranceLimit = 0;              //endurance dial limit, scaled from 0 to 100
 
 //Logical binary variables
 //Inputs
@@ -258,6 +259,7 @@ int fuelAnalog =         0;
 int throttleAnalog =     0;
 int battTempAnalog =     0;
 int radiatorTempAnalog = 0;
+int enduranceDialAnalog = 0;
 
 //These variables are sent to the servo and kelly
 int servoOut =           0;
@@ -326,6 +328,7 @@ void readInputs(){
     fuelAnalog =         analogRead(fuelPin); 
     throttleAnalog =     analogRead(throttlePin);
     radiatorTempAnalog = analogRead(radiatorTempPin);
+    enduranceDialAnalog = analogRead(enduranceDialPin);
 
     //digital pins
     //Most of the variables are set true when pins are driven LOW. Refer to Ports_2011 on Google Docs
@@ -353,6 +356,7 @@ void processInputs(){
     rpm       =    map(rpmAnalog,         0,1023, 0,RPM_SCALE_MAX);         //in Rounds Per Minute (RPM)          
     radiatorTemp = map(radiatorTempAnalog,0,1023, RADIATORTEMP_SCALE_MAX, 0);//in degrees F  (yes this is correct, increased temp -> lower signal)
     fuel      =    map(fuelAnalog,        0,1023, 0,100);                   //in percent
+    enduranceLimit = map(enduranceDialAnalog, 0, 1023, 0, 100); 
 
     //endurance mode button determines mode
     if(modeEndurance == false)      mode = AUTOCROSS_MODE;
@@ -479,6 +483,8 @@ void runCommunication(){
 
 void runTheCar(){
 
+    float enduranceMultiplier = enduranceLimit / 100.0;
+
     //---------------------------------------------------------------------------------------------
     // runTheCar MODES
     //---------------------------------------------------------------------------------------------
@@ -494,12 +500,12 @@ void runTheCar(){
     // Endurance mode 
     else if (mode == ENDURANCE_MODE && endloop == false)
     {       
-        servoOut = throttle;
+        servoOut = throttle * enduranceMultiplier;
+        kellyOut = throttleKelly * enduranceMultiplier;
                    
     } //end of endurance mode
 
     //boost button overrides
-
 
     //}
     //---------------------------------------------------------------------------------------------
