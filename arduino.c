@@ -243,7 +243,6 @@ boolean engineEnable =        false; //Is true if engine enable switch is on
 boolean hvEnable =            false; //Is true if HV enable switch is on
 boolean modeEndurance =       false; //Is true if the mode selector is on Endurance
 boolean modeElectric =        false; //Is true if the mode selector is on Electric
-boolean telemetryEnable =     false; //Telemetry on/off switch
 
 //Outputs
 boolean moduleSleep =         false; //True value sets the telemetry module asleep
@@ -343,8 +342,6 @@ void readInputs(){
     else brake = false;                                                     //otherwise set to false
 
     modeEndurance =     (digitalRead(endurancePin) ==   LOW);
-    telemetryEnable =   (digitalRead(telemetryEnablePin) == LOW);
-
 }
 
 
@@ -961,8 +958,7 @@ void loop()
     processInputs();
 
     //Run Communication
-    if(telemetryEnable == true) {runCommunication();}
-    else {digitalWrite(moduleSleepPin,LOW);}  //If not communicating, set the module asleep
+    runCommunication();
 
     //Run Security Block
     runSecurityBlock();
