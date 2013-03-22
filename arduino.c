@@ -240,7 +240,6 @@ int mode =          AUTOCROSS_MODE;  //Autocross mode by default
 int fuel =          0;               //In percent
 int throttle =      0;               //For the servo, scaled from 0 to 180 (degrees)
 int throttleKelly = 0;               //For the kelly, scaled from 0 to 255 (PWM)
-int gear =          0;               //0 for clutch pressed, 1 for first etc.
 int radiatorTemp =  0;               //In degrees Fahrenheit
 
 //Logical binary variables
@@ -273,7 +272,6 @@ int fuelAnalog =         0;
 int throttleAnalog =     0;
 int battTempAnalog =     0;
 int radiatorTempAnalog = 0;
-int gearAnalog =         0;
 
 //These variables are sent to the servo and kelly
 int servoOut =           0;
@@ -343,7 +341,6 @@ void readInputs(){
     fuelAnalog =         analogRead(fuelPin); 
     throttleAnalog =     analogRead(throttlePin);
     radiatorTempAnalog = analogRead(radiatorTempPin);
-    gearAnalog =         analogRead(gearPin);
 
     //digital pins
     //Most of the variables are set true when pins are driven LOW. Refer to Ports_2011 on Google Docs
@@ -406,9 +403,6 @@ void processInputs(){
         reedOffPrevious = true;
         if (currentTime - previousVelocityTime > 2000) velocity = 0;    
     } 
-
-    //Calculation of gear position
-    //To do: map gear sensor outputs to gears
 
 }
 
@@ -476,7 +470,6 @@ void runCommunication(){
         serialWriteValue((int)clutchPressed, kTelemetryDataTypeClutchPedal);
         serialWriteValue((int)brake,         kTelemetryDataTypeBrakePedal);
         serialWriteValue(     throttle,      kTelemetryDataTypeGasPedal);
-        //serialWriteValue(     gear,          kTelemetryDataTypeGear);
 
         //Low frequency communication
         if(currentTime - previousLongTime > LONG_COMM_INTERVAL)
