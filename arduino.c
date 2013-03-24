@@ -881,7 +881,10 @@ void setup()
     pinMode(hiVoltageLoBattPin,INPUT);
     pinMode(BMSFaultPin,       INPUT);
     pinMode(clutchPin,         INPUT);
+
     pinMode(boostPin,         INPUT);
+    digitalWrite(boostPin,    HIGH); //pull low
+
     pinMode(brakePin,          INPUT);
     pinMode(reedPin,           INPUT);
 
