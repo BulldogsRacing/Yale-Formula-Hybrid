@@ -193,8 +193,8 @@ const int THROTTLE_SCALE_MAX = 602;
 const int SHORT_COMM_INTERVAL = 50;  // for high frequency data in ms !adjust
 const int LONG_COMM_INTERVAL = 1000; //for low frequency data in ms !adjust
 
-const int SERVO_MIN =       900;     // pulse width range for the servo in ms for the HS-805bb currently used
-const int SERVO_MAX =      2100;
+const int SERVO_MIN =       950;     // pulse width range for the servo in ms for the MKS HV-380 currently used
+const int SERVO_MAX =      1750;
 const int SERVO_MIN_ANGLE =   0;     //Limits of throttle servo output angle. !adjust  
 const int SERVO_MAX_ANGLE = 160;
 
