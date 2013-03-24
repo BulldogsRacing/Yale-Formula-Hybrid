@@ -187,9 +187,9 @@ const int VELOCITY_SCALE_MAX =      50; //!adjust
 const int RADIATORTEMP_SCALE_MIN = 180; //In degrees Fahrenheit !adjust
 const int RADIATORTEMP_SCALE_MAX = 300; //In degrees Fahrenheit !adjust
 
-const int THROTTLE_SCALE_MIN = 555;  //Boundary values that the throttle pot sends,
-//the effective path of the throttle pedal
-const int THROTTLE_SCALE_MAX = 602;
+//these are TEST values for the benchtop pot
+const int THROTTLE_SCALE_MIN = 0;  //Boundary values that the throttle pot sends,
+const int THROTTLE_SCALE_MAX = 700;
 
 const int SHORT_COMM_INTERVAL = 50;  // for high frequency data in ms !adjust
 const int LONG_COMM_INTERVAL = 1000; //for low frequency data in ms !adjust
@@ -232,8 +232,6 @@ boolean BMSFault =            false; //Is true if there is a problem with the Li
 boolean clutchPressed =       false; //Is true if the clutch is pressed
 boolean boost =              false; //Is true if the assist/boost button is pressed
 boolean brake =               false; //Is true if the brake pedal is pressed
-boolean servoEnable =         false; //Is true if the servoEnable switch is on
-boolean kellyEnable =         false; //Is true if the kellyEnable switch is on
 boolean engineEnable =        false; //Is true if engine enable switch is on
 boolean hvEnable =            false; //Is true if HV enable switch is on
 boolean modeEndurance =       false; //Is true if the mode selector is on Endurance
@@ -540,11 +538,11 @@ void runTheCar(){
     else                  {digitalWrite(hvEnableOutPin, LOW);}
 
     //Send output to servo
-    if(servoEnable==true && engineEnable == true)  throttleServo.write(servoOut);
-    else throttleServo.write(SERVO_MIN_ANGLE); //Reset the servo if servoEnable is false
+    if(engineEnable == true)  throttleServo.write(servoOut);
+    else throttleServo.write(SERVO_MIN_ANGLE);
 
     //Send output to kelly
-    if(kellyEnable==true && hvEnable==true && hiVoltageLoBatt == false){                 
+    if(hvEnable==true && hiVoltageLoBatt == false){                 
         analogWrite(kellyPin,kellyOut);
     }
     else {
@@ -779,14 +777,9 @@ void testTheCar(){
     {
         servoOut = SERVO_MIN_ANGLE;
     }
-    if(servoEnable==true)  {
-        throttleServo.write(servoOut);
-        analogWrite(kellyPin,0);
-    }    //If Servo Enable is ON, then use servo
-    else{
-        throttleServo.write(SERVO_MIN_ANGLE);                   //Otherwise reset the Servo
-        analogWrite(kellyPin,kellyOut);
-    }
+
+    throttleServo.write(servoOut);
+    analogWrite(kellyPin,0);
 
 }
 
