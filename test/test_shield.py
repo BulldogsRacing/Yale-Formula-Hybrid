@@ -6,8 +6,9 @@ import curses
 from datetime import datetime
 
 
-ser=serial.Serial('/dev/tty.usbmodem411')
+#ser=serial.Serial('/dev/tty.usbmodem411')
 #ser=serial.Serial('/dev/tty.usbmodem621')
+ser=serial.Serial('/dev/tty.usbmodem1421')
 
 stdscr=curses.initscr()
 stdscr.keypad(1)
