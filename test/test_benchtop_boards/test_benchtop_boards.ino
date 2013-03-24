@@ -17,7 +17,16 @@ int engineEnable= 27; //Digital
 int hvEnable =    28; //Digital
 int speed_in =    29; //Digital
 int regen_mode =  30; //Digital
-Servo servo, kelly, regen;
+int critical_out= 33; //Digital
+int engine_kill = 36; //Digital
+int hvtoggle_out= 37; //Digital
+int car_on_led=51;//Digital OUT
+int auto_endur_led=52;//Digital OUT
+int auto_endur_in=39;//Digital IN
+
+int endurance_dial=6;//Analog in
+
+Servo servo;
 
 
 void setup() {
@@ -32,12 +41,15 @@ void setup() {
   pinMode(hvEnable, INPUT);
   pinMode(speed_in, INPUT);
   pinMode(regen_mode, INPUT);
+  pinMode(auto_endur_in,INPUT);
+
+  pinMode(critical_out, OUTPUT);
+  pinMode(engine_kill, OUTPUT);
+  pinMode(hvtoggle_out, OUTPUT);
+  pinMode(car_on_led, OUTPUT);
+  pinMode(auto_endur_led,OUTPUT);
   servo.attach(servo_out);
-  kelly.attach(kelly_out);
-  regen.attach(regen_out);
-  servo.write(90);
-  kelly.write(0);
-  regen.write(180);
+  servo.write(180);
 
 }
 
@@ -71,5 +83,20 @@ void loop() {
   Serial.println(digitalRead(speed_in));
   Serial.print("RegenMode ");
   Serial.println(digitalRead(regen_mode));
+  Serial.print("AutoEndurMode ");
+  Serial.println(digitalRead(auto_endur_in));
+  Serial.print("EnduranceDial ");
+  Serial.println(analogRead(endurance_dial));
+
+  digitalWrite(critical_out,LOW);
+  digitalWrite(engine_kill,HIGH);
+  digitalWrite(hvtoggle_out,LOW);
+  digitalWrite(car_on_led,LOW);
+  digitalWrite(auto_endur_led,LOW);
+
+
+
+  analogWrite(kelly_out,20);
+  analogWrite(regen_out,255);
   delay(10);
 }

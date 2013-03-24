@@ -36,7 +36,8 @@ engineEnable = 0
 hvEnable = 0
 speedIn = 0
 regenMode = 0
-
+autoEndurMode = 0
+enduranceDial = 0
 
 while 1:
     if stdscr.getch()==ord('q'):
@@ -69,11 +70,15 @@ while 1:
         speedIn = items[1]
     elif items[0] == "RegenMode":
         regenMode = items[1]
-    pad.addstr(0,0, "RPM:");pad.addstr(0,20,str(rpm))
-    pad.addstr(1,0, "Temp:"); pad.addstr(1,20,str(temp))
+    elif items[0] == "AutoEndurMode":
+        autoEndurMode = items[1]
+    elif items[0] == "EnduranceDial":
+        enduranceDial = items[1]
+    pad.addstr(0,0, "RPM:");pad.addstr(0,20,str(rpm)+"   ")
+    pad.addstr(1,0, "Temp:"); pad.addstr(1,20,str(temp)+"   ")
     pad.addstr(2,0, "Low Battery:");pad.addstr(2,20,str(battlow))
-    pad.addstr(3,0, "FuelIn:"); pad.addstr(3,20,str(fuelin))
-    pad.addstr(4,0, "Throttle:"); pad.addstr(4,20,str(throttlein))
+    pad.addstr(3,0, "FuelIn:"); pad.addstr(3,20,str(fuelin)+"   ")
+    pad.addstr(4,0, "Throttle:"); pad.addstr(4,20,str(throttlein)+"   ")
     pad.addstr(5,0, "BMS Fault:"); pad.addstr(5,20,str(bmsfault))
     pad.addstr(6,0, "Clutch:"); pad.addstr(6,20,str(clutch))
     pad.addstr(7,0, "Assist In:"); pad.addstr(7,20,str(assist))
@@ -82,6 +87,8 @@ while 1:
     pad.addstr(10,0, "HV Enable:"); pad.addstr(10,20,str(hvEnable))
     pad.addstr(11,0, "SpeedIn:"); pad.addstr(11,20,str(speedIn))
     pad.addstr(12,0, "RegenMode:"); pad.addstr(12,20,str(speedIn))
+    pad.addstr(13,0, "AutoEndurMode:"); pad.addstr(13,20,str(autoEndurMode))
+    pad.addstr(14,0, "EnduranceDial:"); pad.addstr(14,20,str(enduranceDial))
     stdscr.refresh()
     pad.refresh( 0,0, 5,5, 20,75)
     #print "RPM\t",rpm,"\tTemp\t",temp,"\tLow Battery\t",battlow,"\tFuelIn\t",fuelin,"\tThrottle\t",throttlein,"\tBMS Fault\t",bmsfault,"\tClutch\t",clutch,"\tAssist In\t",assist,"\tBrake In\t",brake
