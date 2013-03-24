@@ -502,8 +502,8 @@ void runTheCar(){
     // The order in which the overrides are applied is very important! Be careful switching order.
 
     // Clutch override
-    // if clutch pressed, don't drive the motor
-    if (clutchPressed){
+    // if clutch pressed and engine enabled, don't drive the motor
+    if (clutchPressed == true && engineEnable == true){
         kellyOut = 0;
     }
 
