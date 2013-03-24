@@ -102,6 +102,7 @@ There is also a boost button that delivers max motor power in any scenario.
 //digital output pins
 
 #define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
+#define enduranceLEDPin    52 //LED on the panel, which is on when in endurance mode
 #define criticalPin        33 //LED on the panel, tells if something is wrong
 #define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
 #define hvEnableOutPin     37 //Is HIGH when the high voltage system is supposed to be on
@@ -488,10 +489,9 @@ void runTheCar(){
 
     // Endurance mode logic
     else if (mode == ENDURANCE_MODE && endloop == false)
-    {       
+    {   
         servoOut = throttle * enduranceMultiplier;
         kellyOut = throttleKelly * enduranceMultiplier;
-                   
     }
 
     // ===================
@@ -549,6 +549,11 @@ void runTheCar(){
     }
     else {
         analogWrite(kellyPin,0);
+    }
+
+    //Output value to endurance mode LED
+    if(mode == ENDURANCE_MODE){
+        digitalWrite(enduranceLEDPin, HIGH);
     }
 
     //}
