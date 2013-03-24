@@ -516,11 +516,10 @@ void runTheCar(){
     }
 
     // Braking overrides
-    // if braking, don't drive engine or motor
-    // this override should come LAST in the override order for safety reasons
+    // if braking, don't drive motor
+    // this override should come LAST in the override order
     if (brake == true){
         kellyOut = 0;
-        servoOut = 0;
     }
 
     //}
