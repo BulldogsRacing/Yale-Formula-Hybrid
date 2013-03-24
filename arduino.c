@@ -327,7 +327,7 @@ void readInputs(){
     hiVoltageLoBatt =   (digitalRead(hiVoltageLoBattPin) == LOW);
     BMSFault =          (digitalRead(BMSFaultPin) ==        LOW);
     clutchPressed =     (digitalRead(clutchPin) ==          LOW);
-    boost =             (digitalRead(boostPin) ==          HIGH);
+    boost =             (digitalRead(boostPin) ==          LOW);
     engineEnable =      (digitalRead(engineEnableInPin)  == LOW);
     hvEnable =          (digitalRead(hvEnableInPin) ==     LOW);
 
