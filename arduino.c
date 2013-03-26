@@ -890,6 +890,7 @@ void setup()
 
     //Output pins setup (set some to low to begin, for safety)
     pinMode(powerIndicatorPin,   OUTPUT);
+    pinMode(enduranceLEDPin, OUTPUT);
 
     pinMode(criticalPin,       OUTPUT);
     digitalWrite(criticalPin, LOW);
