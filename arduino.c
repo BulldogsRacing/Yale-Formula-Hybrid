@@ -553,6 +553,9 @@ void runTheCar(){
     if(mode == ENDURANCE_MODE){
         digitalWrite(enduranceLEDPin, HIGH);
     }
+    else {
+        digitalWrite(enduranceLEDPin,LOW);
+    }
 
     //}
 }
