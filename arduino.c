@@ -196,8 +196,8 @@ const int LONG_COMM_INTERVAL = 1000; //for low frequency data in ms !adjust
 
 const int SERVO_MIN =       950;     // pulse width range for the servo in ms for the MKS HV-380 currently used
 const int SERVO_MAX =      1750;
-const int SERVO_MIN_ANGLE =   0;     //Limits of throttle servo output angle. !adjust  
-const int SERVO_MAX_ANGLE = 160;
+const int SERVO_MIN_ANGLE =   23;     //Limits of throttle servo output angle.
+const int SERVO_MAX_ANGLE = 102;
 
 const float WHEEL_CIRCUMFERENCE = 66; // in inches
 const float VELOCITY_SCALAR = 56.82;  //This converts from feet/ms to mph
@@ -927,7 +927,7 @@ void setup()
 
 
     //Setup the servo (set to min angle to begin)
-    throttleServo.attach(servoPin, SERVO_MIN, SERVO_MAX);
+    throttleServo.attach(servoPin);
     throttleServo.write(SERVO_MIN_ANGLE);
 
 
