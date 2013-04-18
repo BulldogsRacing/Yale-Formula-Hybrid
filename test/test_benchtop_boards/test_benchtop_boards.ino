@@ -88,11 +88,11 @@ void loop() {
   Serial.print("EnduranceDial ");
   Serial.println(analogRead(endurance_dial));
 
-  digitalWrite(critical_out,LOW);
+  digitalWrite(critical_out,HIGH);
   digitalWrite(engine_kill,HIGH);
   digitalWrite(hvtoggle_out,LOW);
   digitalWrite(car_on_led,LOW);
-  digitalWrite(auto_endur_led,LOW);
+  digitalWrite(auto_endur_led,HIGH);
 
 
 

@@ -91,6 +91,7 @@ There is also a boost button that delivers max motor power in any scenario.
 #define engineEnableInPin  27 //HIGH when the gas engine enable button is pressed
 #define hvEnableInPin      28 //HIGH when the electric motor enable button is pressed
 #define endurancePin       39 //HIGH when the endurance mode enable button is pressed
+#define readyBtnPin        30 //HIGH when the ready to go button is pressed
 
 //output pins
 //PWM output pins
@@ -103,6 +104,8 @@ There is also a boost button that delivers max motor power in any scenario.
 
 #define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
 #define enduranceLEDPin    52 //LED on the panel, which is on when in endurance mode
+#define readyLEDPin        53 //LED on the panel, which is on when the car is ready to drive 
+#define buzzerPin          54 //Buzzer that buzzes when ready to drive TODO: actually choose this pin
 #define criticalPin        33 //LED on the panel, tells if something is wrong
 #define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
 #define hvEnableOutPin     37 //Is HIGH when the high voltage system is supposed to be on
@@ -236,6 +239,7 @@ boolean engineEnable =        false; //Is true if engine enable switch is on
 boolean hvEnable =            false; //Is true if HV enable switch is on
 boolean modeEndurance =       false; //Is true if the mode selector is on Endurance
 boolean modeElectric =        false; //Is true if the mode selector is on Electric
+boolean ready =               false; //Is true if the ready to drive button has been pressed
 
 //Outputs
 boolean moduleSleep =         false; //True value sets the telemetry module asleep
@@ -267,6 +271,9 @@ unsigned long currentTime =            0;   //Timestamp corresponding to the sta
 unsigned long previousShortTime =      0;   //Time in ms when last short time transmission occured
 unsigned long previousLongTime =       0;   //Time in ms when last long time transmission occured
 unsigned long previousVelocityTime =   0;   //Last time when velocity was measured in ms
+
+//time variable for the ready buzzer
+unsigned long buzzerStartTime =        0;   //time the buzzer started buzzing
 
 //}
 //---------------------------------------------------------------------------------------------
@@ -515,8 +522,16 @@ void runTheCar(){
 
     // Braking overrides
     // if braking, don't drive motor
-    // this override should come LAST in the override order
     if (brake == true){
+        kellyOut = 0;
+    }
+
+    // Ready to Go Button override
+    // if the ready to go button hasn't been pressed, output zero
+    // This has to be last in the override order
+
+    if (ready == false){
+        servoOut = SERVO_MIN;
         kellyOut = 0;
     }
 
@@ -560,6 +575,23 @@ void runTheCar(){
     //}
 }
 
+void manageReadyToGo(){
+    //if ready button hasn't been pressed yet, check if it's pressed
+    if(ready == false){
+        if(digitalRead(readyBtnPin) == HIGH){
+            //if button is pressed, ready to go!
+            ready = true;
+            digitalWrite(buzzerPin, HIGH); //start buzzing
+            buzzerStartTime = millis(); //record the time we started buzzing
+        }
+    }
+    //turn the buzzer off 2 seconds after it starts buzzing
+    else{
+        if(millis() >= (buzzerStartTime + 2000)){
+            digitalWrite(buzzerPin, LOW); //stop buzzing
+        }
+    }
+}
 
 //}
 //---------------------------------------------------------------------------------------------
@@ -960,6 +992,8 @@ void loop()
     //Run Security Block
     runSecurityBlock();
 
+    //Deal with the ready to go button + buzzer
+    manageReadyToGo();
 
     //Modes, servo and kelly output commands
     if(endloop == false){
