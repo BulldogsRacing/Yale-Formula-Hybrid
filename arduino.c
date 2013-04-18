@@ -529,7 +529,7 @@ void runTheCar(){
     // This has to be last in the override order
 
     if (ready == false){
-        servoOut = SERVO_MIN;
+        servoOut = SERVO_MIN_ANGLE;
         kellyOut = 0;
     }
 
