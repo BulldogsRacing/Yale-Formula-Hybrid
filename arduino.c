@@ -102,8 +102,8 @@ There is also a boost button that delivers max motor power in any scenario.
 
 //digital output pins
 
-#define powerIndicatorPin  51 //LED on the panel, which is on when the code is running
 #define enduranceLEDPin    52 //LED on the panel, which is on when in endurance mode
+#define standbyLEDPin      51 //LED on the panel, which is on when the car is in standby mode (not "ready")
 #define readyLEDPin        53 //LED on the panel, which is on when the car is ready to drive 
 #define buzzerPin          54 //Buzzer that buzzes when ready to drive TODO: actually choose this pin
 #define criticalPin        33 //LED on the panel, tells if something is wrong
@@ -580,12 +580,15 @@ void manageReadyToGo(){
             //if button is pressed, ready to go!
             ready = true;
             digitalWrite(buzzerPin, HIGH); //start buzzing
-            buzzerStartTime = millis(); //record the time we started buzzing
+            buzzerStartTime = currentTime; //record the time we started buzzing
+
+            digitalWrite(readyLEDPin, HIGH); //turn the ready LED on
+            digitalWrite(standbyLEDPin, LOW); //turn the standby LED off
         }
     }
     //turn the buzzer off 2 seconds after it starts buzzing
     else{
-        if(millis() >= (buzzerStartTime + 2000)){
+        if(currentTime >= (buzzerStartTime + 2000)){
             digitalWrite(buzzerPin, LOW); //stop buzzing
         }
     }
@@ -922,8 +925,13 @@ void setup()
     pinMode(reedPin,           INPUT);
 
     //Output pins setup (set some to low to begin, for safety)
-    pinMode(powerIndicatorPin,   OUTPUT);
     pinMode(enduranceLEDPin, OUTPUT);
+
+    pinMode(standbyLEDPin,   OUTPUT);
+    digitalWrite(standbyLEDPin, HIGH); //initialize on
+
+    pinMode(readyLEDPin,     OUTPUT);
+    digitalWrite(readyLEDPin, LOW); //initialize off
 
     pinMode(criticalPin,       OUTPUT);
     digitalWrite(criticalPin, LOW);
@@ -972,8 +980,6 @@ void setup()
 
 void loop()
 {
-    digitalWrite(powerIndicatorPin, HIGH);
-
     currentTime = millis(); //Time is reset at the beginning of the loop because various procedures
     //like velocity measuring and telemetry timing use it
     endloop = false; // resets "end loop" condition
