@@ -6,9 +6,9 @@ import curses
 from datetime import datetime
 
 
-#ser=serial.Serial('/dev/tty.usbmodem411')
+ser=serial.Serial('/dev/tty.usbmodem411')
 #ser=serial.Serial('/dev/tty.usbmodem621')
-ser=serial.Serial('/dev/tty.usbmodem1421')
+#ser=serial.Serial('/dev/tty.usbmodem1421')
 
 stdscr=curses.initscr()
 stdscr.keypad(1)
@@ -36,9 +36,9 @@ brake = 0
 engineEnable = 0
 hvEnable = 0
 speedIn = 0
-regenMode = 0
 autoEndurMode = 0
 enduranceDial = 0
+readyToDrive = 0
 
 while 1:
     if stdscr.getch()==ord('q'):
@@ -69,12 +69,12 @@ while 1:
         hvEnable = items[1]
     elif items[0] == "SpeedIn":
         speedIn = items[1]
-    elif items[0] == "RegenMode":
-        regenMode = items[1]
     elif items[0] == "AutoEndurMode":
         autoEndurMode = items[1]
     elif items[0] == "EnduranceDial":
         enduranceDial = items[1]
+    elif items[0] == "ReadyToDrive":
+        readyToDrive = items[1]
     pad.addstr(0,0, "RPM:");pad.addstr(0,20,str(rpm)+"   ")
     pad.addstr(1,0, "Temp:"); pad.addstr(1,20,str(temp)+"   ")
     pad.addstr(2,0, "Low Battery:");pad.addstr(2,20,str(battlow))
@@ -87,9 +87,9 @@ while 1:
     pad.addstr(9,0, "Engine Enable:"); pad.addstr(9,20,str(engineEnable))
     pad.addstr(10,0, "HV Enable:"); pad.addstr(10,20,str(hvEnable))
     pad.addstr(11,0, "SpeedIn:"); pad.addstr(11,20,str(speedIn))
-    pad.addstr(12,0, "RegenMode:"); pad.addstr(12,20,str(speedIn))
-    pad.addstr(13,0, "AutoEndurMode:"); pad.addstr(13,20,str(autoEndurMode))
-    pad.addstr(14,0, "EnduranceDial:"); pad.addstr(14,20,str(enduranceDial))
+    pad.addstr(12,0, "AutoEndurMode:"); pad.addstr(12,20,str(autoEndurMode))
+    pad.addstr(13,0, "EnduranceDial:"); pad.addstr(13,20,str(enduranceDial))
+    pad.addstr(14,0, "ReadyToDrive:"); pad.addstr(14,20,str(readyToDrive))
     stdscr.refresh()
     pad.refresh( 0,0, 5,5, 20,75)
     #print "RPM\t",rpm,"\tTemp\t",temp,"\tLow Battery\t",battlow,"\tFuelIn\t",fuelin,"\tThrottle\t",throttlein,"\tBMS Fault\t",bmsfault,"\tClutch\t",clutch,"\tAssist In\t",assist,"\tBrake In\t",brake

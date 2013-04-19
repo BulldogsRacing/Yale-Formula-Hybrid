@@ -16,7 +16,7 @@ int brake_in =    26; //Digital
 int engineEnable= 27; //Digital
 int hvEnable =    28; //Digital
 int speed_in =    29; //Digital
-int regen_mode =  30; //Digital
+int ready_to_dr=  30; //Digital
 int critical_out= 33; //Digital
 int engine_kill = 36; //Digital
 int hvtoggle_out= 37; //Digital
@@ -40,7 +40,7 @@ void setup() {
   pinMode(engineEnable, INPUT);
   pinMode(hvEnable, INPUT);
   pinMode(speed_in, INPUT);
-  pinMode(regen_mode, INPUT);
+  pinMode(ready_to_dr, INPUT);
   pinMode(auto_endur_in,INPUT);
 
   pinMode(critical_out, OUTPUT);
@@ -81,8 +81,8 @@ void loop() {
   Serial.println(digitalRead(hvEnable));
   Serial.print("SpeedIn ");
   Serial.println(digitalRead(speed_in));
-  Serial.print("RegenMode ");
-  Serial.println(digitalRead(regen_mode));
+  Serial.print("ReadyToDrive ");
+  Serial.println(digitalRead(ready_to_dr));
   Serial.print("AutoEndurMode ");
   Serial.println(digitalRead(auto_endur_in));
   Serial.print("EnduranceDial ");
