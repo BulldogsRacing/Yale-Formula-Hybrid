@@ -550,7 +550,7 @@ void runTheCar(){
     // This has to be last in the override order
 
     if (ready == false){
-        servoOut = SERVO_MIN_ANGLE;
+        servoOut = 0; //this should disable the servo, mech. spring closes throttle
         kellyOut = 0;
     }
 
@@ -995,7 +995,7 @@ void setup()
 
     //Setup the servo (set to min angle to begin)
     throttleServo.attach(servoPin);
-    throttleServo.write(SERVO_MIN_ANGLE);
+    throttleServo.write(0); //this should disable the servo, and mechanical spring will close throttle
 
 
 
