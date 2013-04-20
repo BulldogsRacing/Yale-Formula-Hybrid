@@ -192,7 +192,7 @@ const int RADIATORTEMP_SCALE_MIN = 180; //In degrees Fahrenheit !adjust
 const int RADIATORTEMP_SCALE_MAX = 300; //In degrees Fahrenheit !adjust
 
 //these are TEST values for the benchtop pot
-const int THROTTLE_SCALE_MIN = 0;  //Boundary values that the throttle pot sends,
+const int THROTTLE_SCALE_MIN = 200;  //Boundary values that the throttle pot sends,
 const int THROTTLE_SCALE_MAX = 700;
 
 const int SHORT_COMM_INTERVAL = 50;  // for high frequency data in ms !adjust
@@ -203,6 +203,17 @@ const int SERVO_MAX_ANGLE = 125;
 
 const float WHEEL_CIRCUMFERENCE = 66; // in inches
 const float VELOCITY_SCALAR = 56.82;  //This converts from feet/ms to mph
+
+//If the throttle pot breaks, we want to shut down the engine
+//normally we'll only get values between THROTTLE_SCALE_MIN and THROTTLE_SCALE_MAX
+//so if we get something near 0V (below deadband low) or near 5V (above deadband high),
+//we assume pot has broken, and we shut off the engine
+
+const int ADC_MAX = 1024;
+const int THROTTLE_DEADBAND_WIDTH = 100;
+const int THROTTLE_DEADBAND_LOW = 0 + THROTTLE_DEADBAND_WIDTH;
+const int THROTTLE_DEADBAND_HIGH = ADC_MAX - THROTTLE_DEADBAND_WIDTH;
+
 //}
 //}
 //---------------------------------------------------------------------------------------------
@@ -356,12 +367,21 @@ void processInputs(){
     if(modeEndurance == false)      mode = AUTOCROSS_MODE;
     else if (modeEndurance == true) mode = ENDURANCE_MODE;
 
-    //constrain throttle analog value between calibrated values
-    throttleAnalog = constrain(throttleAnalog, THROTTLE_SCALE_MIN, THROTTLE_SCALE_MAX);
+    if(throttleAnalog < THROTTLE_DEADBAND_LOW || throttleAnalog > THROTTLE_DEADBAND_HIGH){
+        //if pot breaks and throttle is in deadband, kill engine/motor
+        throttle = 0;
+        throttleKelly = 0;
+    }
+    else{
+        //otherwise, map throttle values as normal
 
-    //map throttle analog to servo and Kelly-PWM appropriate values
-    throttle = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE); 
-    throttleKelly = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,0,FULL_PWM);
+        //constrain throttle analog value between calibrated values
+        throttleAnalog = constrain(throttleAnalog, THROTTLE_SCALE_MIN, THROTTLE_SCALE_MAX);
+
+        //map throttle analog to servo and Kelly-PWM appropriate values
+        throttle = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE);
+        throttleKelly = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,0,FULL_PWM);
+    }
 
     //Calculation of velocity from the reed switch on the wheel
     if (digitalRead(reedPin) == LOW)
