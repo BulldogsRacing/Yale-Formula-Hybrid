@@ -576,7 +576,7 @@ void runTheCar(){
 void manageReadyToGo(){
     //if ready button hasn't been pressed yet, check if it's pressed
     if(ready == false){
-        if(digitalRead(readyBtnPin) == HIGH){
+        if(digitalRead(readyBtnPin) == LOW){
             //if button is pressed, ready to go!
             ready = true;
             digitalWrite(buzzerPin, HIGH); //start buzzing
