@@ -17,7 +17,7 @@ capable of regen.
 Basic description:
 The purpose of the code is to take data from sensors, evaluate it and input
 power to the motor and the engine. It also handles some of the dashboard
-indicators and telemetry communication. 
+indicators and telemetry communication.
 
 The Arduino program has two modes:
 
@@ -40,14 +40,14 @@ There is also a boost button that delivers max motor power in any scenario.
 
 2.1 Variable initialization
 2.2 Communication initialization
-2.3 Servo initialization 
+2.3 Servo initialization
 
 3. FUNCTIONS
 
 3.1 Main program body functions
 3.2 Communication functions
 3.3 Debugging functions
-3.4 Other functions  
+3.4 Other functions
 
 4. EXECUTION
 
@@ -71,13 +71,13 @@ There is also a boost button that delivers max motor power in any scenario.
 //input pins (sensors)
 //analog input pins
 
-#define rpmPin             A0 //RPM 
+#define rpmPin             A0 //RPM
 #define throttlePin        A4 //throttle amount - from the pedal
-#define radiatorTempPin    A1 //Temperature of the radiator 
+#define radiatorTempPin    A1 //Temperature of the radiator
 #define fuelPin            A3 //fuel level sensor
 #define enduranceDialPin   A6 //sets endurance power limit
 
-//digital input pins  
+//digital input pins
 
 //sensors
 #define hiVoltageLoBattPin 22 //HIGH when the High voltage battery is critical
@@ -104,7 +104,7 @@ There is also a boost button that delivers max motor power in any scenario.
 
 #define enduranceLEDPin    52 //LED on the panel, which is on when in endurance mode
 #define standbyLEDPin      50 //LED on the panel, which is on when the car is in standby mode (not "ready")
-#define readyLEDPin        53 //LED on the panel, which is on when the car is ready to drive 
+#define readyLEDPin        53 //LED on the panel, which is on when the car is ready to drive
 #define buzzerPin          49 //Buzzer that buzzes when ready to drive TODO: actually choose this pin
 #define criticalPin        33 //LED on the panel, tells if something is wrong
 #define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
@@ -132,7 +132,7 @@ There is also a boost button that delivers max motor power in any scenario.
 //values were introduced to prevent oscillations.
 
 const int CRITICAL_RPM =    4000;    //In revolutions per minute !adjust
-const int CRITICAL_VELOCITY = 45;    //In miles per hour !adjust 
+const int CRITICAL_VELOCITY = 45;    //In miles per hour !adjust
 const int CRITICAL_BATT =     75;    //In volts !adjust
 const int CRITICAL_FUEL =     10;    //In percent !adjust
 const int CRITICAL_TEMP =    230;    //In degrees Fahrenheit !adjust
@@ -179,7 +179,7 @@ const int kTelemetryDataCommandSetCarEnableState =         15;
 const int AUTOCROSS_MODE = 1;        //Shortcuts for the mode selector
 const int ENDURANCE_MODE = 2;
 
-const int FULL_PWM =      255;           //Maximum PWM output 
+const int FULL_PWM =      255;           //Maximum PWM output
 const int ENDURANCE_ASSIST = 0;
 const int AUTOCROSS_ASSIST = FULL_PWM;
 
@@ -241,7 +241,7 @@ int enduranceLimit = 0;              //endurance dial limit, scaled from 0 to 10
 //Logical binary variables
 //Inputs
 boolean hiVoltageLoBatt =     false; //Is true if the battery level is low
-boolean BMSFault =            false; //Is true if there is a problem with the Lithium-Ions. 
+boolean BMSFault =            false; //Is true if there is a problem with the Lithium-Ions.
 boolean clutchPressed =       false; //Is true if the clutch is pressed
 boolean boost =              false; //Is true if the assist/boost button is pressed
 boolean brake =               false; //Is true if the brake pedal is pressed
@@ -260,7 +260,7 @@ boolean reedOffPrevious =     false; //Is true when the reed was HIGH (not at th
 boolean assisting          =  false;
 
 //analog variables are in the scope of 0-1023, as read from the sensors.
-int rpmAnalog =          0;        
+int rpmAnalog =          0;
 int fuelAnalog =         0;
 int throttleAnalog =     0;
 int battTempAnalog =     0;
@@ -333,8 +333,8 @@ Servo throttleServo;  //This is the instance of our servo
 void readInputs(){
     //analog pins
 
-    rpmAnalog =          analogRead(rpmPin);           
-    fuelAnalog =         analogRead(fuelPin); 
+    rpmAnalog =          analogRead(rpmPin);
+    fuelAnalog =         analogRead(fuelPin);
     throttleAnalog =     analogRead(throttlePin);
     radiatorTempAnalog = analogRead(radiatorTempPin);
     enduranceDialAnalog = analogRead(enduranceDialPin);
@@ -357,11 +357,11 @@ void readInputs(){
 
 void processInputs(){
 
-    //transform the analog 0-1023 data to actual values    
-    rpm       =    map(rpmAnalog,         0,1023, 0,RPM_SCALE_MAX);         //in Rounds Per Minute (RPM)          
+    //transform the analog 0-1023 data to actual values
+    rpm       =    map(rpmAnalog,         0,1023, 0,RPM_SCALE_MAX);         //in Rounds Per Minute (RPM)
     radiatorTemp = map(radiatorTempAnalog,0,1023, RADIATORTEMP_SCALE_MAX, 0);//in degrees F  (yes this is correct, increased temp -> lower signal)
     fuel      =    map(fuelAnalog,        0,1023, 0,100);                   //in percent
-    enduranceLimit = map(enduranceDialAnalog, 0, 1023, 0, 100); 
+    enduranceLimit = map(enduranceDialAnalog, 0, 1023, 0, 100);
 
     //endurance mode button determines mode
     if(modeEndurance == false)      mode = AUTOCROSS_MODE;
@@ -388,7 +388,7 @@ void processInputs(){
     {
         if (reedOffPrevious == true)
         {
-            velocity = (WHEEL_CIRCUMFERENCE / (currentTime - previousVelocityTime)) * VELOCITY_SCALAR; 
+            velocity = (WHEEL_CIRCUMFERENCE / (currentTime - previousVelocityTime)) * VELOCITY_SCALAR;
             previousVelocityTime = currentTime;
             reedOffPrevious = false;
         }
@@ -399,8 +399,8 @@ void processInputs(){
 
     else {
         reedOffPrevious = true;
-        if (currentTime - previousVelocityTime > 2000) velocity = 0;    
-    } 
+        if (currentTime - previousVelocityTime > 2000) velocity = 0;
+    }
 
 }
 
@@ -412,8 +412,8 @@ void runSecurityBlock(){
     //under the limit again.
 
 
-    if (//rpm > CRITICAL_RPM ||  Disclaimer: this car has been made less safe by Sid, don't blame Jan and Geoffrey if things go wrong ;) 
-        //velocity > CRITICAL_VELOCITY || 
+    if (//rpm > CRITICAL_RPM ||  Disclaimer: this car has been made less safe by Sid, don't blame Jan and Geoffrey if things go wrong ;)
+        //velocity > CRITICAL_VELOCITY ||
         // radiatorTemp > CRITICAL_TEMP ||
         BMSFault ==            true )
             // || virtualBigRedButton == true
@@ -431,7 +431,7 @@ void runSecurityBlock(){
         //set servo and kelly output to zero
 
         if (//rpm <                  LIMIT_RPM &&
-                //velocity <             LIMIT_VELOCITY && 
+                //velocity <             LIMIT_VELOCITY &&
                 //radiatorTemp <         LIMIT_TEMP &&
                 BMSFault ==            false )
             // && virtualBigRedButton == false
@@ -441,9 +441,9 @@ void runSecurityBlock(){
             //to prevent oscillations from critical cycle to normal and back
         {criticalCycle = false;
             endloop = false;
-            digitalWrite(criticalPin,LOW);}       
+            digitalWrite(criticalPin,LOW);}
 
-            //if the conditions are still critical, do not execute the main program body         
+            //if the conditions are still critical, do not execute the main program body
     }
 }
 
@@ -499,7 +499,7 @@ void runTheCar(){
     // runTheCar MODES
     //---------------------------------------------------------------------------------------------
     //{
-    
+
     // ===================
     // MAIN MODE LOGIC
     // ===================
@@ -584,7 +584,7 @@ void runTheCar(){
     else throttleServo.write(SERVO_MIN_ANGLE);
 
     //Send output to kelly
-    if(hvEnable==true && hiVoltageLoBatt == false){                 
+    if(hvEnable==true && hiVoltageLoBatt == false){
         analogWrite(kellyPin,kellyOut);
     }
     else {
@@ -625,20 +625,20 @@ void manageReadyToGo(){
 
 //}
 //---------------------------------------------------------------------------------------------
-// 3.2 Communication functions 
+// 3.2 Communication functions
 //---------------------------------------------------------------------------------------------
 //{
 
 // 3.2.1 Sending functions
 
-//Call this method to initiate a new serial write operation. 
+//Call this method to initiate a new serial write operation.
 void serialWriteBegin() {
     writeIndex = 0;        //Reset the write index, and add the initial characters for the protocol.
     writeBuffer[0] = '<';
     writeIndex++;
 }
 
-//Add a value to the buffer. 
+//Add a value to the buffer.
 //Format of the buffer string is <ID=value,ID=value>, like <0=23,1=100,2=0>
 void serialWriteValue(int value,int ID) {
     if (writeIndex>1) {
@@ -647,7 +647,7 @@ void serialWriteValue(int value,int ID) {
     }
 
     char c[10];//Use this array to convert the value and IDs into individual chars.
-    itoa(ID,c,10);//This function does the integer to string conversion. 
+    itoa(ID,c,10);//This function does the integer to string conversion.
     writeBuffer[writeIndex] = c[0];//Write the ID, which corresponds to the data type
     writeIndex++;
 
@@ -680,7 +680,7 @@ void serialWriteValue(int value,int ID) {
 }
 
 //This function does the actual sending. It writes the buffer to the given serial port
-//up until write index (after adding in the final protocol characters). 
+//up until write index (after adding in the final protocol characters).
 //You can pass in which serial port to send over.
 void serialWriteCommit(int serial) {
     writeBuffer[writeIndex] = '>';//Close the buffer string
@@ -709,7 +709,7 @@ int telemetrySendSetGlobal(int id, int val) {
             //...
             //...
         default:
-            break; 
+            break;
     }
 }
 
@@ -774,16 +774,16 @@ void serialPortReadInBackgroundToBuffer(int port) {
         if (port==0) {
             newByte = Serial.read();
         } else if (port == 1) {
-            newByte = Serial1.read(); 
+            newByte = Serial1.read();
         } else {
-            return; 
+            return;
         }
 
         readBuffer[readBufferIndex] = newByte;
         readBufferIndex++;
         if (newByte == '>') {
             //This is the end byte of the communication protocol. We should have a complete string in the buffer to parse.
-            processSerialBuffer(); 
+            processSerialBuffer();
         }
     }
 
@@ -987,10 +987,10 @@ void setup()
 
     //Initialize serial communications at 9600 bps:
     Serial.begin(9600);   //Serial - first serial port of the Arduino board connected to
-    //the built in serial to USB converter. Calls to this serial port 
+    //the built in serial to USB converter. Calls to this serial port
     //will communicate over USB to a computer.
-    Serial1.begin(9600);  //Serial1 - second serial port of the Arduino board connected to 
-    //the RF transceiver. Data sent to this port will be added to the transceiver's queue. 
+    Serial1.begin(9600);  //Serial1 - second serial port of the Arduino board connected to
+    //the RF transceiver. Data sent to this port will be added to the transceiver's queue.
 
 
     //Setup the servo (set to min angle to begin)
