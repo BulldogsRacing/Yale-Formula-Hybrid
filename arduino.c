@@ -103,7 +103,7 @@ There is also a boost button that delivers max motor power in any scenario.
 //digital output pins
 
 #define enduranceLEDPin    52 //LED on the panel, which is on when in endurance mode
-#define standbyLEDPin      51 //LED on the panel, which is on when the car is in standby mode (not "ready")
+#define standbyLEDPin      50 //LED on the panel, which is on when the car is in standby mode (not "ready")
 #define readyLEDPin        53 //LED on the panel, which is on when the car is ready to drive 
 #define buzzerPin          54 //Buzzer that buzzes when ready to drive TODO: actually choose this pin
 #define criticalPin        33 //LED on the panel, tells if something is wrong
