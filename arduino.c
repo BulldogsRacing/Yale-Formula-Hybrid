@@ -110,6 +110,7 @@ There is also a boost button that delivers max motor power in any scenario.
 #define engineEnableOutPin 36 //Connected to a relay, needs to be HIGH in order to accelerate
 #define hvEnableOutPin     37 //Is HIGH when the high voltage system is supposed to be on
 #define moduleSleepPin     38 //Pauses the onboard telemetry module
+#define brakeLightPin      51 //turns the brake light on
 
 #define sevenSeg0Pin       44 // velocity sevenseg output bit 0
 #define sevenSeg1Pin       45 // velocity sevenseg output bit 1
@@ -492,7 +493,7 @@ void runTheCar(){
 
     // Endurance mode logic
     else if (mode == ENDURANCE_MODE && endloop == false)
-    {   
+    {
         servoOut = throttle * enduranceMultiplier;
         kellyOut = throttleKelly * enduranceMultiplier;
     }
@@ -541,6 +542,14 @@ void runTheCar(){
 
     //send velocity to seven seg display
     sevenSegOut();
+
+    //manage the brakelight
+    if(brake){
+        digitalWrite(brakeLightPin, LOW); //turn brake light on
+    }
+    else{
+        digitalWrite(brakeLightPin, HIGH); //turn brake light off
+    }
 
     //Turn the engine relay on if engine enable switch is on
     if (engineEnable == true) {digitalWrite(engineEnableOutPin, HIGH);}
