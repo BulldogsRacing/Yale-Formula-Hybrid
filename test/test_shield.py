@@ -88,7 +88,7 @@ while 1:
     pad.addstr(10,0, "HV Enable:"); pad.addstr(10,20,str(hvEnable))
     pad.addstr(11,0, "SpeedIn:"); pad.addstr(11,20,str(speedIn))
     pad.addstr(12,0, "AutoEndurMode:"); pad.addstr(12,20,str(autoEndurMode))
-    pad.addstr(13,0, "EnduranceDial:"); pad.addstr(13,20,str(enduranceDial))
+    pad.addstr(13,0, "EnduranceDial:"); pad.addstr(13,20,str(enduranceDial)+"   ")
     pad.addstr(14,0, "ReadyToDrive:"); pad.addstr(14,20,str(readyToDrive))
     stdscr.refresh()
     pad.refresh( 0,0, 5,5, 20,75)

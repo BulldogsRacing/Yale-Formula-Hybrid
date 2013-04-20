@@ -20,9 +20,10 @@ int ready_to_dr=  30; //Digital
 int critical_out= 33; //Digital
 int engine_kill = 36; //Digital
 int hvtoggle_out= 37; //Digital
-int car_on_led=51;//Digital OUT
+int car_on_led=50;//Digital OUT
 int auto_endur_led=52;//Digital OUT
 int auto_endur_in=39;//Digital IN
+int ready_to_drive_LED=53;
 
 int endurance_dial=6;//Analog in
 
@@ -48,6 +49,7 @@ void setup() {
   pinMode(hvtoggle_out, OUTPUT);
   pinMode(car_on_led, OUTPUT);
   pinMode(auto_endur_led,OUTPUT);
+  pinMode(ready_to_drive_LED,OUTPUT);
   servo.attach(servo_out);
   servo.write(180);
 
@@ -89,10 +91,12 @@ void loop() {
   Serial.println(analogRead(endurance_dial));
 
   digitalWrite(critical_out,HIGH);
-  digitalWrite(engine_kill,HIGH);
+  digitalWrite(engine_kill,LOW);
   digitalWrite(hvtoggle_out,LOW);
-  digitalWrite(car_on_led,LOW);
   digitalWrite(auto_endur_led,HIGH);
+  
+  digitalWrite(car_on_led,LOW);
+  digitalWrite(ready_to_drive_LED,HIGH);
 
 
 
