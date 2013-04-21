@@ -23,7 +23,7 @@ The Arduino program has two modes:
 
 Autocross: Fast as possible. Engine and motor both powered to max
 Endurance: Save energy. Limit engine and motor to certain % power, based on
-					 value of the endurance dial input
+                     value of the endurance dial input
 
 There is also a boost button that delivers max motor power in any scenario.
 
@@ -179,7 +179,8 @@ const int kTelemetryDataCommandSetCarEnableState =         15;
 const int AUTOCROSS_MODE = 1;        //Shortcuts for the mode selector
 const int ENDURANCE_MODE = 2;
 
-const int FULL_PWM =      255;           //Maximum PWM output
+/*const int FULL_PWM =      255;           //Maximum PWM output*/
+const int FULL_PWM =      127;           //Maximum PWM output
 const int ENDURANCE_ASSIST = 0;
 const int AUTOCROSS_ASSIST = FULL_PWM;
 
@@ -192,8 +193,8 @@ const int RADIATORTEMP_SCALE_MIN = 180; //In degrees Fahrenheit !adjust
 const int RADIATORTEMP_SCALE_MAX = 300; //In degrees Fahrenheit !adjust
 
 //these are TEST values for the benchtop pot
-const int THROTTLE_SCALE_MIN = 200;  //Boundary values that the throttle pot sends,
-const int THROTTLE_SCALE_MAX = 700;
+const int THROTTLE_SCALE_MIN = 330;  //Boundary values that the throttle pot sends,
+const int THROTTLE_SCALE_MAX = 470;
 
 const int SHORT_COMM_INTERVAL = 50;  // for high frequency data in ms !adjust
 const int LONG_COMM_INTERVAL = 1000; //for low frequency data in ms !adjust
@@ -379,8 +380,8 @@ void processInputs(){
         throttleAnalog = constrain(throttleAnalog, THROTTLE_SCALE_MIN, THROTTLE_SCALE_MAX);
 
         //map throttle analog to servo and Kelly-PWM appropriate values
-        throttle = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE);
-        throttleKelly = map(throttleAnalog,THROTTLE_SCALE_MIN,THROTTLE_SCALE_MAX,0,FULL_PWM);
+        throttle = map(throttleAnalog,THROTTLE_SCALE_MAX,THROTTLE_SCALE_MIN,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE);
+        throttleKelly = map(throttleAnalog,THROTTLE_SCALE_MAX,THROTTLE_SCALE_MIN,0,FULL_PWM);
     }
 
     //Calculation of velocity from the reed switch on the wheel
@@ -862,7 +863,7 @@ void debug(float outfloat){
 }
 
 void debug(boolean outboolean){
-    if (outboolean == true)  Serial.println("true");
+    if (outboolean == true) Serial.println("true");
     else                     Serial.println("false");
     delay(0);
 
@@ -1020,7 +1021,7 @@ void loop()
     processInputs();
 
     //Run Communication
-    runCommunication();
+    //runCommunication();
 
     //Run Security Block
     runSecurityBlock();
