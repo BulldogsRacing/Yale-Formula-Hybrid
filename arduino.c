@@ -347,9 +347,7 @@ void readInputs(){
     boost =             (digitalRead(boostPin) ==          LOW);
     engineEnable =      (digitalRead(engineEnableInPin)  == LOW);
     hvEnable =          (digitalRead(hvEnableInPin) ==     LOW);
-
-    if(hvEnable==true) brake =(digitalRead(brakePin) ==     LOW);  //the brake is only checked if HV is enabled,
-    else brake = false;                                                     //otherwise set to false
+    brake =             (digitalRead(brakePin) ==          LOW);
 
     modeEndurance =     (digitalRead(endurancePin) ==   LOW);
 }
@@ -565,10 +563,10 @@ void runTheCar(){
 
     //manage the brakelight
     if(brake){
-        digitalWrite(brakeLightPin, LOW); //turn brake light on
+        digitalWrite(brakeLightPin, HIGH); //turn brake light on
     }
-    else{
-        digitalWrite(brakeLightPin, HIGH); //turn brake light off
+    else {
+        digitalWrite(brakeLightPin, LOW); //turn brake light off
     }
 
     //Turn the engine relay on if engine enable switch is on
@@ -972,6 +970,8 @@ void setup()
     digitalWrite(hvEnableOutPin, LOW);
 
     pinMode(moduleSleepPin,    OUTPUT);
+
+    pinMode(brakeLightPin, OUTPUT);
 
     pinMode(sevenSeg0Pin, OUTPUT);
     pinMode(sevenSeg1Pin, OUTPUT);
