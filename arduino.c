@@ -179,8 +179,7 @@ const int kTelemetryDataCommandSetCarEnableState =         15;
 const int AUTOCROSS_MODE = 1;        //Shortcuts for the mode selector
 const int ENDURANCE_MODE = 2;
 
-/*const int FULL_PWM =      255;           //Maximum PWM output*/
-const int FULL_PWM =      127;           //Maximum PWM output
+const int FULL_PWM =      255;           //Maximum PWM output
 const int ENDURANCE_ASSIST = 0;
 const int AUTOCROSS_ASSIST = FULL_PWM;
 
