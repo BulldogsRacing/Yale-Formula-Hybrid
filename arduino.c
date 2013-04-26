@@ -241,6 +241,7 @@ int enduranceLimit = 0;              //endurance dial limit, scaled from 0 to 10
 //Inputs
 boolean hiVoltageLoBatt =     false; //Is true if the battery level is low
 boolean BMSFault =            false; //Is true if there is a problem with the Lithium-Ions.
+boolean pedalFault =          false; //Is true when the throttle pot is in its deadband range
 boolean clutchPressed =       false; //Is true if the clutch is pressed
 boolean boost =              false; //Is true if the assist/boost button is pressed
 boolean brake =               false; //Is true if the brake pedal is pressed
@@ -368,6 +369,7 @@ void processInputs(){
         //if pot breaks and throttle is in deadband, kill engine/motor
         throttle = 0;
         throttleKelly = 0;
+        pedalFault = true;
     }
     else{
         //otherwise, map throttle values as normal
@@ -409,17 +411,11 @@ void runSecurityBlock(){
     //under the limit again.
 
 
-    if (//rpm > CRITICAL_RPM ||  Disclaimer: this car has been made less safe by Sid, don't blame Jan and Geoffrey if things go wrong ;)
-        //velocity > CRITICAL_VELOCITY ||
-        // radiatorTemp > CRITICAL_TEMP ||
-        BMSFault ==            true )
-            // || virtualBigRedButton == true
-
-        {
+    if (BMSFault ==            true || pedalFault == true) {
             criticalCycle = true;
             endloop = true;
             digitalWrite(criticalPin,HIGH);
-        }
+    }
 
     if (criticalCycle == true){
         kill();
@@ -605,7 +601,7 @@ void manageReadyToGo(){
         if(digitalRead(readyBtnPin) == LOW){
             //if button is pressed, ready to go!
             ready = true;
-            digitalWrite(buzzerPin, HIGH); //start buzzing
+            digitalWrite(buzzerPin, LOW); //start buzzing
             buzzerStartTime = currentTime; //record the time we started buzzing
 
             digitalWrite(readyLEDPin, HIGH); //turn the ready LED on
@@ -615,7 +611,7 @@ void manageReadyToGo(){
     //turn the buzzer off 2 seconds after it starts buzzing
     else{
         if(currentTime >= (buzzerStartTime + 2000)){
-            digitalWrite(buzzerPin, LOW); //stop buzzing
+            digitalWrite(buzzerPin, HIGH); //stop buzzing
         }
     }
 }
@@ -885,7 +881,6 @@ void debugDelay(int ms) {delay(ms);}
 void kill()
 {
     digitalWrite(engineEnableOutPin, LOW);
-    digitalWrite(hvEnableOutPin, LOW);
     servoOut = SERVO_MIN_ANGLE;
     kellyOut = 0;
     throttleServo.write(servoOut);
@@ -971,6 +966,9 @@ void setup()
     pinMode(moduleSleepPin,    OUTPUT);
 
     pinMode(brakeLightPin, OUTPUT);
+
+    pinMode(buzzerPin,OUTPUT);
+    digitalWrite(buzzerPin,HIGH);
 
     pinMode(sevenSeg0Pin, OUTPUT);
     pinMode(sevenSeg1Pin, OUTPUT);
