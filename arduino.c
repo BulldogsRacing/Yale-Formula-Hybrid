@@ -610,7 +610,7 @@ void manageReadyToGo(){
     }
     //turn the buzzer off 2 seconds after it starts buzzing
     else{
-        if(currentTime >= (buzzerStartTime + 2000)){
+        if(currentTime >= (buzzerStartTime + 1500)){
             digitalWrite(buzzerPin, HIGH); //stop buzzing
         }
     }
