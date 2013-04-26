@@ -191,9 +191,8 @@ const int VELOCITY_SCALE_MAX =      50; //!adjust
 const int RADIATORTEMP_SCALE_MIN = 180; //In degrees Fahrenheit !adjust
 const int RADIATORTEMP_SCALE_MAX = 300; //In degrees Fahrenheit !adjust
 
-//these are TEST values for the benchtop pot
-const int THROTTLE_SCALE_MIN = 330;  //Boundary values that the throttle pot sends,
-const int THROTTLE_SCALE_MAX = 470;
+const int THROTTLE_SCALE_MIN = 242;  //Boundary values that the throttle pot sends,
+const int THROTTLE_SCALE_MAX = 359;
 
 const int SHORT_COMM_INTERVAL = 50;  // for high frequency data in ms !adjust
 const int LONG_COMM_INTERVAL = 1000; //for low frequency data in ms !adjust
