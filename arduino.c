@@ -414,8 +414,8 @@ void runSecurityBlock(){
     if (BMSFault ==            true || pedalFault == true) {
             criticalCycle = true;
             digitalWrite(criticalPin,HIGH);
-        kellyOut = 0;
-        digitalWrite(kellyPin,kellyOut);
+            /*kellyOut = 0;*/
+            /*digitalWrite(kellyPin,kellyOut);*/
     }
 
     if (criticalCycle == true){
@@ -423,8 +423,8 @@ void runSecurityBlock(){
         digitalWrite(criticalPin,HIGH);
         //set servo and kelly output to zero
 
-        kellyOut = 0;
-        digitalWrite(kellyPin,kellyOut);
+        /*kellyOut = 0;*/
+        /*digitalWrite(kellyPin,kellyOut);*/
         if (//rpm <                  LIMIT_RPM &&
                 //velocity <             LIMIT_VELOCITY &&
                 //radiatorTemp <         LIMIT_TEMP &&
@@ -503,12 +503,12 @@ void runTheCar(){
     if (mode == AUTOCROSS_MODE && endloop == false)
     {
         servoOut = throttle;
-        if (BMSFault == false) {
+        /*if (BMSFault == false) {*/
             kellyOut = throttleKelly;
-        }
-        else {
-            kellyOut = 0;
-        }
+        /*}*/
+        /*else {*/
+            /*kellyOut = 0;*/
+        /*}*/
     }
 
     // Endurance mode logic
