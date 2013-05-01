@@ -880,10 +880,12 @@ void debugDelay(int ms) {delay(ms);}
 //Virtual Big Red Button is activated or in critical cycle
 void kill()
 {
-    digitalWrite(engineEnableOutPin, LOW);
-    servoOut = SERVO_MIN_ANGLE;
+    if (pedalFault && !BMSFault) { //If this is a pedal fault and not a BMS fault, kill engine
+        digitalWrite(engineEnableOutPin, LOW);
+        servoOut = SERVO_MIN_ANGLE;
+        throttleServo.write(servoOut);
+    }
     kellyOut = 0;
-    throttleServo.write(servoOut);
     digitalWrite(kellyPin,kellyOut);
 }
 
